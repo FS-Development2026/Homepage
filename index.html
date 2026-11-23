@@ -1,1 +1,2149 @@
 
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FS-Development | Future-Ready Open Source FiveM Scripts</title>
+  <meta name="description" content="FS-Development by Paul – Futuristic, standalone, 100% free and permanently open-source FiveM scripts built solo with AI." />
+
+  <!-- Instant Theme & Language Pre-Boot (Prevents any flash of wrong theme/language) -->
+  <script>
+    (function () {
+      try {
+        const savedTheme = localStorage.getItem('fs_dev_theme');
+        const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+        const theme = (savedTheme === 'light' || savedTheme === 'dark') ? savedTheme : (prefersDark ? 'dark' : 'light');
+        document.documentElement.setAttribute('data-theme', theme);
+
+        const savedLang = localStorage.getItem('fs_dev_lang');
+        let lang = 'en';
+        if (savedLang === 'de' || savedLang === 'en') {
+          lang = savedLang;
+        } else {
+          const langs = (navigator.languages && navigator.languages.length)
+            ? navigator.languages
+            : [navigator.language || navigator.userLanguage || ''];
+          for (let i = 0; i < langs.length; i++) {
+            if (typeof langs[i] === 'string' && langs[i].toLowerCase().startsWith('de')) {
+              lang = 'de';
+              break;
+            }
+          }
+        }
+        document.documentElement.setAttribute('lang', lang);
+        window.__FS_INITIAL_LANG__ = lang;
+      } catch (e) {
+        document.documentElement.setAttribute('data-theme', 'dark');
+        document.documentElement.setAttribute('lang', 'en');
+        window.__FS_INITIAL_LANG__ = 'en';
+      }
+    })();
+  </script>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet" />
+
+  <style>
+    /* ==========================================================================
+       1. CSS VARIABLES & THEME SYSTEM (AUTO LIGHT / DARK)
+       ========================================================================== */
+    :root {
+      --bg-primary: #f4f7fb;
+      --bg-secondary: #ffffff;
+      --bg-elevated: #eef2f8;
+      --bg-code: #0f172a;
+      --text-primary: #0b1120;
+      --text-secondary: #475569;
+      --text-muted: #64748b;
+      --border-color: rgba(15, 23, 42, 0.1);
+      --border-strong: rgba(2, 132, 199, 0.35);
+      --accent-primary: #0284c7;
+      --accent-secondary: #059669;
+      --accent-glow: rgba(2, 132, 199, 0.18);
+      --danger: #e11d48;
+      --warning: #d97706;
+      --card-shadow: 0 12px 32px -8px rgba(15, 23, 42, 0.08);
+      --grid-line: rgba(15, 23, 42, 0.045);
+      --header-bg: rgba(244, 247, 251, 0.88);
+      --drawer-bg: rgba(255, 255, 255, 0.97);
+      --radius-lg: 20px;
+      --radius-md: 14px;
+      --radius-sm: 9px;
+      --transition: 0.28s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    [data-theme="dark"] {
+      --bg-primary: #06080f;
+      --bg-secondary: #0d121f;
+      --bg-elevated: #141c2f;
+      --bg-code: #080b14;
+      --text-primary: #f1f5f9;
+      --text-secondary: #94a3b8;
+      --text-muted: #64748b;
+      --border-color: rgba(148, 163, 184, 0.12);
+      --border-strong: rgba(56, 189, 248, 0.4);
+      --accent-primary: #38bdf8;
+      --accent-secondary: #34d399;
+      --accent-glow: rgba(56, 189, 248, 0.16);
+      --danger: #fb7185;
+      --warning: #fbbf24;
+      --card-shadow: 0 18px 40px -12px rgba(0, 0, 0, 0.65);
+      --grid-line: rgba(56, 189, 248, 0.04);
+      --header-bg: rgba(6, 8, 15, 0.86);
+      --drawer-bg: rgba(13, 18, 31, 0.98);
+    }
+
+    /* ==========================================================================
+       2. RESET & BASE STYLES
+       ========================================================================== */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      font-size: 16px;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.65;
+      overflow-x: hidden;
+      transition: background-color 0.35s ease, color 0.35s ease;
+    }
+
+    /* Enable custom cursor hiding only on fine pointer (mouse) devices */
+    @media (pointer: fine) {
+      body, a, button, input, label, select, .interactive-target {
+        cursor: none !important;
+      }
+    }
+
+    h1, h2, h3, h4, .brand-font {
+      font-family: 'Space Grotesk', sans-serif;
+      letter-spacing: -0.02em;
+    }
+
+    code, pre, .mono {
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 1220px;
+      margin: 0 auto;
+      padding: 0 1.5rem;
+    }
+
+    /* Architectural Background Grid + Ambient Glow */
+    .bg-grid {
+      position: fixed;
+      inset: 0;
+      z-index: -2;
+      background-image:
+        linear-gradient(to right, var(--grid-line) 1px, transparent 1px),
+        linear-gradient(to bottom, var(--grid-line) 1px, transparent 1px);
+      background-size: 46px 46px;
+      pointer-events: none;
+    }
+
+    .bg-orb {
+      position: fixed;
+      width: 560px;
+      height: 560px;
+      border-radius: 50%;
+      filter: blur(130px);
+      z-index: -1;
+      opacity: 0.45;
+      pointer-events: none;
+    }
+
+    .bg-orb-1 {
+      top: -180px;
+      left: -140px;
+      background: var(--accent-primary);
+    }
+
+    .bg-orb-2 {
+      bottom: -200px;
+      right: -140px;
+      background: var(--accent-secondary);
+      opacity: 0.25;
+    }
+
+    /* ==========================================================================
+       3. CUSTOM MAGNETIC CURSOR
+       ========================================================================== */
+    .cursor-dot,
+    .cursor-ring {
+      position: fixed;
+      top: 0;
+      left: 0;
+      pointer-events: none;
+      z-index: 9999;
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      transition: opacity 0.2s ease;
+    }
+
+    .cursor-dot {
+      width: 8px;
+      height: 8px;
+      background-color: var(--accent-primary);
+      box-shadow: 0 0 12px var(--accent-primary);
+    }
+
+    .cursor-ring {
+      width: 36px;
+      height: 36px;
+      border: 1.5px solid var(--accent-primary);
+      transition: width 0.22s ease, height 0.22s ease, background-color 0.22s ease, border-color 0.22s ease;
+    }
+
+    .cursor-ring.hovered {
+      width: 54px;
+      height: 54px;
+      background-color: var(--accent-glow);
+      border-color: var(--accent-secondary);
+    }
+
+    .cursor-ring.clicking {
+      width: 26px;
+      height: 26px;
+    }
+
+    @media (pointer: coarse) {
+      .cursor-dot, .cursor-ring {
+        display: none !important;
+      }
+    }
+
+    /* ==========================================================================
+       4. HEADER & BURGER MENU SYSTEM
+       ========================================================================== */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      background-color: var(--header-bg);
+      border-bottom: 1px solid var(--border-color);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+    }
+
+    .nav-wrapper {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 76px;
+      gap: 1rem;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-weight: 700;
+      font-size: 1.25rem;
+    }
+
+    .logo-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+      color: #04070d;
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 800;
+      font-size: 0.95rem;
+      box-shadow: 0 4px 16px var(--accent-glow);
+    }
+
+    .logo span.sub {
+      color: var(--accent-primary);
+    }
+
+    .desktop-nav {
+      display: flex;
+      align-items: center;
+      gap: 1.75rem;
+    }
+
+    .desktop-nav a {
+      font-size: 0.93rem;
+      font-weight: 500;
+      color: var(--text-secondary);
+      transition: color var(--transition);
+      position: relative;
+    }
+
+    .desktop-nav a:hover {
+      color: var(--accent-primary);
+    }
+
+    .nav-controls {
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+    }
+
+    .icon-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.4rem;
+      height: 40px;
+      padding: 0 0.85rem;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border-color);
+      background-color: var(--bg-secondary);
+      color: var(--text-primary);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.82rem;
+      font-weight: 600;
+      transition: all var(--transition);
+    }
+
+    .icon-btn:hover {
+      border-color: var(--accent-primary);
+      transform: translateY(-1px);
+      box-shadow: 0 6px 18px var(--accent-glow);
+    }
+
+    /* Animated Burger Button */
+    .burger-btn {
+      display: inline-flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 5px;
+      width: 42px;
+      height: 40px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border-color);
+      background: var(--bg-secondary);
+      transition: all var(--transition);
+      z-index: 1102;
+    }
+
+    .burger-btn:hover {
+      border-color: var(--accent-primary);
+    }
+
+    .burger-line {
+      width: 20px;
+      height: 2px;
+      background-color: var(--text-primary);
+      border-radius: 2px;
+      transition: transform 0.3s ease, opacity 0.25s ease;
+    }
+
+    .burger-btn.active .burger-line:nth-child(1) {
+      transform: translateY(7px) rotate(45deg);
+    }
+
+    .burger-btn.active .burger-line:nth-child(2) {
+      opacity: 0;
+    }
+
+    .burger-btn.active .burger-line:nth-child(3) {
+      transform: translateY(-7px) rotate(-45deg);
+    }
+
+    /* Slide-Out Burger Drawer */
+    .drawer-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(2, 6, 23, 0.65);
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s ease, visibility 0.3s ease;
+      z-index: 1099;
+    }
+
+    .drawer-backdrop.open {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .burger-drawer {
+      position: fixed;
+      top: 0;
+      right: 0;
+      width: min(380px, 88vw);
+      height: 100dvh;
+      background: var(--drawer-bg);
+      border-left: 1px solid var(--border-color);
+      padding: 6rem 2rem 2rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transform: translateX(100%);
+      transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+      z-index: 1100;
+      box-shadow: -20px 0 50px rgba(0, 0, 0, 0.4);
+    }
+
+    .burger-drawer.open {
+      transform: translateX(0);
+    }
+
+    .drawer-links {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .drawer-links a {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.9rem 1.1rem;
+      border-radius: var(--radius-md);
+      background: var(--bg-elevated);
+      border: 1px solid var(--border-color);
+      font-weight: 600;
+      font-size: 1rem;
+      transition: all var(--transition);
+    }
+
+    .drawer-links a:hover {
+      border-color: var(--accent-primary);
+      transform: translateX(4px);
+      color: var(--accent-primary);
+    }
+
+    .drawer-footer {
+      border-top: 1px solid var(--border-color);
+      padding-top: 1.25rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.85rem;
+    }
+
+    .drawer-meta {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+    }
+
+    @media (max-width: 880px) {
+      .desktop-nav {
+        display: none;
+      }
+    }
+
+    /* ==========================================================================
+       5. HERO SECTION
+       ========================================================================== */
+    .hero {
+      padding: 5.5rem 0 4rem;
+      position: relative;
+    }
+
+    .hero-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      padding: 0.45rem 1rem;
+      border-radius: 999px;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-strong);
+      font-size: 0.84rem;
+      font-weight: 600;
+      color: var(--accent-primary);
+      margin-bottom: 1.6rem;
+      box-shadow: 0 4px 20px var(--accent-glow);
+    }
+
+    .pulse-dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: var(--accent-secondary);
+      box-shadow: 0 0 0 0 rgba(52, 211, 153, 0.7);
+      animation: pulseRing 2s infinite;
+    }
+
+    @keyframes pulseRing {
+      0% { box-shadow: 0 0 0 0 rgba(52, 211, 153, 0.7); }
+      70% { box-shadow: 0 0 0 10px rgba(52, 211, 153, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(52, 211, 153, 0); }
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: 3rem;
+      align-items: center;
+    }
+
+    .hero h1 {
+      font-size: clamp(2.4rem, 5vw, 4.1rem);
+      line-height: 1.1;
+      margin-bottom: 1.35rem;
+    }
+
+    .gradient-text {
+      background: linear-gradient(120deg, var(--accent-primary), var(--accent-secondary));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero-lead {
+      font-size: 1.12rem;
+      color: var(--text-secondary);
+      max-width: 630px;
+      margin-bottom: 2rem;
+    }
+
+    .hero-cta-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      padding: 0.95rem 1.65rem;
+      border-radius: var(--radius-md);
+      background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+      color: #030712;
+      font-weight: 700;
+      font-size: 0.98rem;
+      border: none;
+      transition: transform var(--transition), box-shadow var(--transition);
+      box-shadow: 0 10px 28px var(--accent-glow);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 14px 34px var(--accent-glow);
+    }
+
+    .btn-secondary {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      padding: 0.95rem 1.55rem;
+      border-radius: var(--radius-md);
+      background: var(--bg-secondary);
+      color: var(--text-primary);
+      font-weight: 600;
+      font-size: 0.98rem;
+      border: 1px solid var(--border-color);
+      transition: all var(--transition);
+    }
+
+    .btn-secondary:hover {
+      border-color: var(--accent-primary);
+      transform: translateY(-2px);
+    }
+
+    /* Terminal Hero Card */
+    .hero-terminal {
+      background: var(--bg-code);
+      color: #e2e8f0;
+      border-radius: var(--radius-lg);
+      border: 1px solid rgba(56, 189, 248, 0.25);
+      box-shadow: var(--card-shadow);
+      overflow: hidden;
+    }
+
+    .terminal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.85rem 1.15rem;
+      background: rgba(255, 255, 255, 0.04);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      font-size: 0.8rem;
+      color: #94a3b8;
+    }
+
+    .terminal-dots {
+      display: flex;
+      gap: 6px;
+    }
+
+    .terminal-dots span {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+    }
+
+    .terminal-dots span:nth-child(1) { background: #ef4444; }
+    .terminal-dots span:nth-child(2) { background: #f59e0b; }
+    .terminal-dots span:nth-child(3) { background: #10b981; }
+
+    .terminal-body {
+      padding: 1.35rem;
+      font-size: 0.86rem;
+      line-height: 1.75;
+    }
+
+    .t-comment { color: #64748b; }
+    .t-key { color: #38bdf8; }
+    .t-str { color: #34d399; }
+    .t-bool { color: #fbbf24; }
+
+    @media (max-width: 960px) {
+      .hero-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* ==========================================================================
+       6. HONEST "DAY 1" STATS BAR
+       ========================================================================== */
+    .stats-section {
+      padding: 1.5rem 0 4.5rem;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1.25rem;
+    }
+
+    .stat-card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 1.65rem;
+      box-shadow: var(--card-shadow);
+      transition: transform var(--transition), border-color var(--transition);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .stat-card:hover {
+      transform: translateY(-4px);
+      border-color: var(--accent-primary);
+    }
+
+    .stat-tag {
+      display: inline-block;
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      padding: 0.25rem 0.6rem;
+      border-radius: 6px;
+      background: var(--bg-elevated);
+      color: var(--accent-primary);
+      margin-bottom: 0.85rem;
+    }
+
+    .stat-value {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 2.2rem;
+      font-weight: 700;
+      line-height: 1.15;
+      margin-bottom: 0.4rem;
+    }
+
+    .stat-label {
+      font-size: 0.92rem;
+      color: var(--text-secondary);
+    }
+
+    @media (max-width: 960px) {
+      .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 540px) {
+      .stats-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* ==========================================================================
+       7. SECTION HEADERS & ABOUT / SOLO + AI STORY
+       ========================================================================== */
+    section.block {
+      padding: 4.5rem 0;
+    }
+
+    .section-head {
+      max-width: 720px;
+      margin-bottom: 3rem;
+    }
+
+    .section-kicker {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.84rem;
+      font-weight: 700;
+      color: var(--accent-primary);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 0.6rem;
+      display: block;
+    }
+
+    .section-head h2 {
+      font-size: clamp(1.85rem, 3.4vw, 2.75rem);
+      margin-bottom: 0.9rem;
+    }
+
+    .section-head p {
+      color: var(--text-secondary);
+      font-size: 1.05rem;
+    }
+
+    .about-layout {
+      display: grid;
+      grid-template-columns: 1.05fr 0.95fr;
+      gap: 2rem;
+      align-items: stretch;
+    }
+
+    .story-card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 2.25rem;
+      box-shadow: var(--card-shadow);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 1.5rem;
+    }
+
+    .founder-badge {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 1rem 1.25rem;
+      border-radius: var(--radius-md);
+      background: var(--bg-elevated);
+      border: 1px solid var(--border-color);
+    }
+
+    .founder-avatar {
+      width: 52px;
+      height: 52px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+      color: #030712;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 800;
+      font-size: 1.35rem;
+      flex-shrink: 0;
+    }
+
+    .pillars-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.15rem;
+    }
+
+    .pillar-item {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 1.5rem;
+      box-shadow: var(--card-shadow);
+      transition: transform var(--transition), border-color var(--transition);
+    }
+
+    .pillar-item:hover {
+      transform: translateY(-3px);
+      border-color: var(--accent-secondary);
+    }
+
+    .pillar-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      background: var(--accent-glow);
+      color: var(--accent-primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .pillar-item h3 {
+      font-size: 1.12rem;
+      margin-bottom: 0.45rem;
+    }
+
+    .pillar-item p {
+      font-size: 0.91rem;
+      color: var(--text-secondary);
+    }
+
+    @media (max-width: 960px) {
+      .about-layout {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 580px) {
+      .pillars-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* ==========================================================================
+       8. INTERACTIVE PLAYGROUND (SMARTWATCH NUI SIM + LIVE CONFIG GENERATOR)
+       ========================================================================== */
+    .lab-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+    }
+
+    .lab-card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 2rem;
+      box-shadow: var(--card-shadow);
+      display: flex;
+      flex-direction: column;
+      gap: 1.35rem;
+    }
+
+    .lab-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+    }
+
+    .lab-badge {
+      padding: 0.3rem 0.75rem;
+      border-radius: 999px;
+      font-size: 0.76rem;
+      font-weight: 700;
+      background: var(--accent-glow);
+      color: var(--accent-primary);
+      border: 1px solid var(--border-strong);
+    }
+
+    /* Simulated Smartwatch Bezel */
+    .watch-stage {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+      border-radius: var(--radius-md);
+      background: var(--bg-elevated);
+      border: 1px solid var(--border-color);
+      gap: 1.25rem;
+    }
+
+    .watch-bezel {
+      width: 230px;
+      height: 268px;
+      border-radius: 44px;
+      background: #090d16;
+      border: 4px solid #334155;
+      box-shadow: 0 20px 45px rgba(0, 0, 0, 0.55), inset 0 0 18px rgba(56, 189, 248, 0.2);
+      padding: 1.15rem;
+      color: #f8fafc;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      position: relative;
+      transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .watch-bezel.theme-amber {
+      border-color: #d97706;
+      box-shadow: 0 20px 45px rgba(0, 0, 0, 0.55), inset 0 0 18px rgba(251, 191, 36, 0.25);
+    }
+
+    .watch-bezel.theme-emerald {
+      border-color: #059669;
+      box-shadow: 0 20px 45px rgba(0, 0, 0, 0.55), inset 0 0 18px rgba(52, 211, 153, 0.25);
+    }
+
+    .watch-bezel.alert-flash {
+      animation: watchShake 0.4s ease;
+      border-color: #f43f5e;
+    }
+
+    @keyframes watchShake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-5px); }
+      50% { transform: translateX(5px); }
+      75% { transform: translateX(-3px); }
+    }
+
+    .watch-top {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.72rem;
+      color: #94a3b8;
+    }
+
+    .watch-time {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 2.25rem;
+      font-weight: 700;
+      text-align: center;
+      line-height: 1;
+      margin: 0.25rem 0;
+    }
+
+    .watch-metrics {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.5rem;
+    }
+
+    .w-metric {
+      background: rgba(255, 255, 255, 0.06);
+      border-radius: 12px;
+      padding: 0.5rem;
+      text-align: center;
+    }
+
+    .w-metric small {
+      display: block;
+      font-size: 0.65rem;
+      color: #94a3b8;
+      text-transform: uppercase;
+    }
+
+    .w-metric strong {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.95rem;
+      color: #38bdf8;
+    }
+
+    .watch-sos-btn {
+      width: 100%;
+      padding: 0.5rem;
+      border-radius: 12px;
+      border: none;
+      background: #e11d48;
+      color: #fff;
+      font-weight: 700;
+      font-size: 0.76rem;
+      letter-spacing: 0.04em;
+      transition: transform 0.15s ease, background 0.2s ease;
+    }
+
+    .watch-sos-btn:hover {
+      background: #be123c;
+      transform: scale(1.02);
+    }
+
+    .watch-controls {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 0.5rem;
+    }
+
+    .mini-chip {
+      padding: 0.45rem 0.85rem;
+      border-radius: 8px;
+      border: 1px solid var(--border-color);
+      background: var(--bg-secondary);
+      color: var(--text-primary);
+      font-size: 0.8rem;
+      font-weight: 600;
+      transition: all 0.2s ease;
+    }
+
+    .mini-chip:hover {
+      border-color: var(--accent-primary);
+      color: var(--accent-primary);
+    }
+
+    .watch-log {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.78rem;
+      color: var(--accent-secondary);
+      text-align: center;
+      min-height: 1.4em;
+    }
+
+    /* Interactive Lua Config Builder */
+    .config-toggles {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.65rem;
+    }
+
+    .toggle-pill {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.65rem 0.85rem;
+      border-radius: var(--radius-sm);
+      background: var(--bg-elevated);
+      border: 1px solid var(--border-color);
+      font-size: 0.84rem;
+      font-weight: 500;
+      user-select: none;
+    }
+
+    .toggle-pill input {
+      accent-color: var(--accent-primary);
+      width: 16px;
+      height: 16px;
+    }
+
+    .code-box {
+      background: var(--bg-code);
+      color: #e2e8f0;
+      border-radius: var(--radius-md);
+      padding: 1.1rem;
+      font-size: 0.82rem;
+      line-height: 1.6;
+      border: 1px solid rgba(56, 189, 248, 0.2);
+      overflow-x: auto;
+    }
+
+    @media (max-width: 960px) {
+      .lab-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 520px) {
+      .config-toggles {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* ==========================================================================
+       9. ROADMAP & INTERACTIVE FAQ ACCORDION
+       ========================================================================== */
+    .roadmap-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1.25rem;
+    }
+
+    .road-card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 1.6rem;
+      box-shadow: var(--card-shadow);
+      position: relative;
+    }
+
+    .road-card.active {
+      border-color: var(--accent-primary);
+      box-shadow: 0 12px 32px var(--accent-glow);
+    }
+
+    .road-step {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--accent-secondary);
+      margin-bottom: 0.5rem;
+      display: block;
+    }
+
+    .road-card h3 {
+      font-size: 1.1rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .road-card p {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+    }
+
+    @media (max-width: 960px) {
+      .roadmap-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 540px) {
+      .roadmap-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* Accordion */
+    .faq-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.9rem;
+      max-width: 860px;
+    }
+
+    .faq-item {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      transition: border-color 0.25s ease;
+    }
+
+    .faq-item.open {
+      border-color: var(--accent-primary);
+    }
+
+    .faq-question {
+      width: 100%;
+      padding: 1.2rem 1.4rem;
+      background: transparent;
+      border: none;
+      color: var(--text-primary);
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.05rem;
+      font-weight: 700;
+      text-align: left;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+
+    .faq-icon {
+      font-family: 'JetBrains Mono', monospace;
+      color: var(--accent-primary);
+      font-size: 1.2rem;
+      transition: transform 0.25s ease;
+    }
+
+    .faq-item.open .faq-icon {
+      transform: rotate(45deg);
+    }
+
+    .faq-answer {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.32s ease, padding 0.32s ease;
+      padding: 0 1.4rem;
+      color: var(--text-secondary);
+      font-size: 0.96rem;
+    }
+
+    .faq-item.open .faq-answer {
+      max-height: 240px;
+      padding: 0 1.4rem 1.25rem;
+    }
+
+    /* ==========================================================================
+       10. FOOTER
+       ========================================================================== */
+    footer {
+      border-top: 1px solid var(--border-color);
+      background: var(--bg-secondary);
+      padding: 3rem 0;
+      margin-top: 3rem;
+    }
+
+    .footer-grid {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1.5rem;
+    }
+
+    .locale-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.4rem 0.85rem;
+      border-radius: 999px;
+      background: var(--bg-elevated);
+      border: 1px solid var(--border-color);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.78rem;
+      color: var(--text-secondary);
+    }
+  </style>
+</head>
+<body>
+  <!-- Custom Cursor Elements -->
+  <div class="cursor-dot" id="cursorDot"></div>
+  <div class="cursor-ring" id="cursorRing"></div>
+
+  <!-- Ambient Grid & Glow -->
+  <div class="bg-grid"></div>
+  <div class="bg-orb bg-orb-1"></div>
+  <div class="bg-orb bg-orb-2"></div>
+
+  <!-- ========================================================================
+       HEADER & NAVIGATION
+       ======================================================================== -->
+  <header>
+    <div class="container nav-wrapper">
+      <a href="#top" class="logo interactive-target">
+        <span class="logo-badge">FS</span>
+        <span>FS-<span class="sub">Development</span></span>
+      </a>
+
+      <nav class="desktop-nav" aria-label="Main Navigation">
+        <a href="#vision" class="interactive-target" data-i18n="nav_vision">Vision & Solo Dev</a>
+        <a href="#lab" class="interactive-target" data-i18n="nav_lab">Interactive Lab</a>
+        <a href="#roadmap" class="interactive-target" data-i18n="nav_roadmap">Roadmap</a>
+        <a href="#faq" class="interactive-target" data-i18n="nav_faq">FAQ</a>
+      </nav>
+
+      <div class="nav-controls">
+        <button type="button" id="langToggle" class="icon-btn interactive-target" title="Switch Language">
+          🌐 <span id="langLabel">EN</span>
+        </button>
+
+        <button type="button" id="themeToggle" class="icon-btn interactive-target" title="Toggle Dark/Light Mode" aria-label="Toggle Theme">
+          <span id="themeIcon">🌙</span>
+        </button>
+
+        <button type="button" id="burgerBtn" class="burger-btn interactive-target" aria-label="Open Menu" aria-expanded="false">
+          <span class="burger-line"></span>
+          <span class="burger-line"></span>
+          <span class="burger-line"></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Slide-Out Burger Menu Drawer -->
+  <div class="drawer-backdrop" id="drawerBackdrop"></div>
+  <aside class="burger-drawer" id="burgerDrawer" aria-hidden="true">
+    <div>
+      <p class="section-kicker" style="margin-bottom: 1rem;">FS-DEVELOPMENT // MENU</p>
+      <div class="drawer-links">
+        <a href="#top" class="drawer-link interactive-target">
+          <span data-i18n="drawer_home">Start / Overview</span> <span>→</span>
+        </a>
+        <a href="#vision" class="drawer-link interactive-target">
+          <span data-i18n="nav_vision">Vision & Solo Dev</span> <span>→</span>
+        </a>
+        <a href="#lab" class="drawer-link interactive-target">
+          <span data-i18n="nav_lab">Interactive Lab</span> <span>→</span>
+        </a>
+        <a href="#roadmap" class="drawer-link interactive-target">
+          <span data-i18n="nav_roadmap">Roadmap</span> <span>→</span>
+        </a>
+        <a href="#faq" class="drawer-link interactive-target">
+          <span data-i18n="nav_faq">FAQ</span> <span>→</span>
+        </a>
+      </div>
+    </div>
+
+    <div class="drawer-footer">
+      <div style="display: flex; gap: 0.65rem;">
+        <button type="button" id="drawerLangBtn" class="icon-btn interactive-target" style="flex: 1;">
+          🌐 <span data-i18n="drawer_switch_lang">Sprache: DE / EN</span>
+        </button>
+        <button type="button" id="drawerThemeBtn" class="icon-btn interactive-target" style="flex: 1;">
+          🌓 <span data-i18n="drawer_switch_theme">Theme</span>
+        </button>
+      </div>
+      <p class="drawer-meta" data-i18n="drawer_note">
+        Built solo by Paul with AI assistance. 100% Free & Open Source FiveM Scripts.
+      </p>
+    </div>
+  </aside>
+
+  <!-- ========================================================================
+       HERO SECTION
+       ======================================================================== -->
+  <main id="top">
+    <section class="hero">
+      <div class="container hero-grid">
+        <div>
+          <div class="hero-pill">
+            <span class="pulse-dot"></span>
+            <span data-i18n="hero_badge">EARLY STAGE • 100% FREE & PERMANENTLY OPEN SOURCE</span>
+          </div>
+
+          <h1 data-i18n="hero_title">
+            Next-Gen <span class="gradient-text">FiveM Scripts</span>. Free Forever.
+          </h1>
+
+          <p class="hero-lead" data-i18n="hero_lead">
+            Welcome to FS-Development. I'm Paul — building futuristic, realistic, and standalone FiveM resources completely solo with the help of AI. Our mission: supporting servers right from the start with high-end scripts that stay 100% free and open source forever.
+          </p>
+
+          <div class="hero-cta-group">
+            <a href="#lab" class="btn-primary interactive-target">
+              ⚡ <span data-i18n="hero_cta_primary">Test Interactive Lab</span>
+            </a>
+            <a href="#vision" class="btn-secondary interactive-target">
+              👨‍💻 <span data-i18n="hero_cta_secondary">About Paul & The Mission</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- Live Code Manifest Card -->
+        <div class="hero-terminal interactive-target">
+          <div class="terminal-header">
+            <div class="terminal-dots">
+              <span></span><span></span><span></span>
+            </div>
+            <span class="mono">fs_manifest.lua</span>
+          </div>
+          <div class="terminal-body mono">
+            <div><span class="t-comment">-- FS-Development Core Philosophy</span></div>
+            <div><span class="t-key">Team</span> = <span class="t-str">"FS-Development"</span></div>
+            <div><span class="t-key">Founder</span> = <span class="t-str">"Paul (Solo Dev + AI)"</span></div>
+            <div><span class="t-key">Stage</span> = <span class="t-str">"Day 1 / Just Getting Started"</span></div>
+            <div><span class="t-key">Price</span> = <span class="t-str">"0.00 € (Free Forever)"</span></div>
+            <div><span class="t-key">OpenSource</span> = <span class="t-bool">true</span></div>
+            <div><span class="t-key">Paywalls</span> = <span class="t-bool">false</span></div>
+            <div><span class="t-key">Architecture</span> = <span class="t-str">"Standalone / ox_lib"</span></div>
+            <div><span class="t-key">TargetResmon</span> = <span class="t-str">"0.00 ms idle"</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================================================================
+         HONEST "DAY 1" STATS SECTION
+         ====================================================================== -->
+    <section class="stats-section">
+      <div class="container">
+        <div class="stats-grid">
+          <div class="stat-card interactive-target">
+            <span class="stat-tag" data-i18n="stat1_tag">STARTING FRESH</span>
+            <div class="stat-value">0 → 1</div>
+            <div class="stat-label" data-i18n="stat1_label">Scripts Released (First Flagship in Active Dev)</div>
+          </div>
+
+          <div class="stat-card interactive-target">
+            <span class="stat-tag" data-i18n="stat2_tag">ZERO PAYWALLS</span>
+            <div class="stat-value">100%</div>
+            <div class="stat-label" data-i18n="stat2_label">Free & Permanently Open Source for Every Server</div>
+          </div>
+
+          <div class="stat-card interactive-target">
+            <span class="stat-tag" data-i18n="stat3_tag">SOLO WORKFLOW</span>
+            <div class="stat-value">1 + AI</div>
+            <div class="stat-label" data-i18n="stat3_label">Paul Alone + Modern AI Engineering Power</div>
+          </div>
+
+          <div class="stat-card interactive-target">
+            <span class="stat-tag" data-i18n="stat4_tag">PERFORMANCE</span>
+            <div class="stat-value">0.00ms</div>
+            <div class="stat-label" data-i18n="stat4_label">Target Idle Resmon via Clean Standalone Lua</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================================================================
+         ABOUT PAUL & SOLO + AI VISION
+         ====================================================================== -->
+    <section id="vision" class="block">
+      <div class="container">
+        <div class="section-head">
+          <span class="section-kicker" data-i18n="vision_kicker">// WHO IS BEHIND FS-DEVELOPMENT</span>
+          <h2 data-i18n="vision_title">One Developer. AI Assistance. Zero Limits for Your Server.</h2>
+          <p data-i18n="vision_sub">
+            No bloated agency, no locked escrow scripts, and no hidden subscriptions. Just pure passion for realistic FiveM systems.
+          </p>
+        </div>
+
+        <div class="about-layout">
+          <div class="story-card interactive-target">
+            <div>
+              <h3 style="font-size: 1.45rem; margin-bottom: 1rem;" data-i18n="story_heading">
+                Why I Started FS-Development
+              </h3>
+              <p style="color: var(--text-secondary); margin-bottom: 1rem;" data-i18n="story_p1">
+                Hey, I'm Paul! After working on several FiveM projects and seeing how hard it is for new or passionate server owners to afford high-quality, modern scripts, I decided to launch FS-Development on my own.
+              </p>
+              <p style="color: var(--text-secondary);" data-i18n="story_p2">
+                Right now, we are right at the beginning of this journey. I design, code, test, and maintain everything completely solo — using AI as a smart co-pilot to build futuristic ideas faster, cleaner, and completely open source so anyone can learn from and customize the code.
+              </p>
+            </div>
+
+            <div class="founder-badge">
+              <div class="founder-avatar">P</div>
+              <div>
+                <strong style="display: block; font-size: 1.02rem;" data-i18n="founder_name">Paul — Founder & Solo Developer</strong>
+                <span style="font-size: 0.86rem; color: var(--text-secondary);" data-i18n="founder_role">
+                  CfxLua • NUI Design • Standalone FiveM Systems • AI-Assisted Dev
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <div class="pillars-grid">
+            <div class="pillar-item interactive-target">
+              <div class="pillar-icon">01</div>
+              <h3 data-i18n="pillar1_title">Futuristic Concepts</h3>
+              <p data-i18n="pillar1_desc">
+                Immersive mechanics like interactive 3D wrist smartwatches, realistic dispatch triggers, and modern NUI interfaces.
+              </p>
+            </div>
+
+            <div class="pillar-item interactive-target">
+              <div class="pillar-icon">02</div>
+              <h3 data-i18n="pillar2_title">Forever Open Source</h3>
+              <p data-i18n="pillar2_desc">
+                Full source code on GitHub. Edit, expand, translate, and adapt every single script to your server's exact needs.
+              </p>
+            </div>
+
+            <div class="pillar-item interactive-target">
+              <div class="pillar-icon">03</div>
+              <h3 data-i18n="pillar3_title">Solo + AI Speed</h3>
+              <p data-i18n="pillar3_desc">
+                By combining hands-on FiveM experience with AI workflows, one developer can ship polished features at full speed.
+              </p>
+            </div>
+
+            <div class="pillar-item interactive-target">
+              <div class="pillar-icon">04</div>
+              <h3 data-i18n="pillar4_title">Standalone & ox_lib</h3>
+              <p data-i18n="pillar4_desc">
+                Built cleanly around ox_lib, ox_target, and ox_inventory — compatible with German & international RP servers.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================================================================
+         INTERACTIVE LAB (SMARTWATCH NUI DEMO & LIVE CONFIG GENERATOR)
+         ====================================================================== -->
+    <section id="lab" class="block">
+      <div class="container">
+        <div class="section-head">
+          <span class="section-kicker" data-i18n="lab_kicker">// INTERACTIVE PREVIEW LAB</span>
+          <h2 data-i18n="lab_title">Test Our Upcoming Tech Live in Your Browser</h2>
+          <p data-i18n="lab_sub">
+            Get a hands-on preview of our very first upcoming open-source release: the FS-Smartwatch NUI & live config builder.
+          </p>
+        </div>
+
+        <div class="lab-grid">
+          <!-- Interactive Widget 1: Smartwatch NUI Simulator -->
+          <div class="lab-card">
+            <div class="lab-header">
+              <h3 data-i18n="watch_card_title">Project #01: FS-Smartwatch NUI</h3>
+              <span class="lab-badge" data-i18n="watch_status">IN DEVELOPMENT</span>
+            </div>
+
+            <div class="watch-stage">
+              <div class="watch-bezel" id="watchBezel">
+                <div class="watch-top">
+                  <span>FS-OS v0.1</span>
+                  <span id="watchRegionBadge">DE • 112</span>
+                </div>
+
+                <div class="watch-time" id="watchClock">17:30</div>
+
+                <div class="watch-metrics">
+                  <div class="w-metric">
+                    <small data-i18n="watch_steps_lbl">STEPS</small>
+                    <strong id="watchSteps">4,280</strong>
+                  </div>
+                  <div class="w-metric">
+                    <small data-i18n="watch_bpm_lbl">HEART RATE</small>
+                    <strong id="watchBpm">76 BPM</strong>
+                  </div>
+                </div>
+
+                <button type="button" id="watchSosBtn" class="watch-sos-btn interactive-target" data-i18n="watch_sos_btn">
+                  🚨 QUICK DISPATCH (112)
+                </button>
+              </div>
+
+              <div class="watch-controls">
+                <button type="button" class="mini-chip interactive-target" id="btnSprint" data-i18n="watch_btn_sprint">
+                  🏃 Simulate Sprint
+                </button>
+                <button type="button" class="mini-chip interactive-target" id="btnWatchface" data-i18n="watch_btn_face">
+                  🎨 Switch Watchface
+                </button>
+                <button type="button" class="mini-chip interactive-target" id="btnToggleRegion" data-i18n="watch_btn_region">
+                  🌍 DE (112) / US (911)
+                </button>
+              </div>
+
+              <div class="watch-log" id="watchLog" data-i18n="watch_log_idle">
+                Ready — Click any control above to test live NUI feedback.
+              </div>
+            </div>
+          </div>
+
+          <!-- Interactive Widget 2: Live Lua Config Generator -->
+          <div class="lab-card">
+            <div class="lab-header">
+              <h3 data-i18n="cfg_card_title">Live Standalone Config Builder</h3>
+              <button type="button" id="copyConfigBtn" class="mini-chip interactive-target" data-i18n="cfg_copy">
+                📋 Copy config.lua
+              </button>
+            </div>
+
+            <p style="font-size: 0.92rem; color: var(--text-secondary);" data-i18n="cfg_desc">
+              Toggle features below to see how clean and customizable every FS-Development script is structured:
+            </p>
+
+            <div class="config-toggles">
+              <label class="toggle-pill interactive-target">
+                <span data-i18n="cfg_opt_zoom">3D Wrist Camera Zoom</span>
+                <input type="checkbox" id="optZoom" checked />
+              </label>
+              <label class="toggle-pill interactive-target">
+                <span data-i18n="cfg_opt_sound">Heartbeat & Vibration FX</span>
+                <input type="checkbox" id="optSound" checked />
+              </label>
+              <label class="toggle-pill interactive-target">
+                <span data-i18n="cfg_opt_ox">ox_inventory Item Mode</span>
+                <input type="checkbox" id="optOx" checked />
+              </label>
+              <label class="toggle-pill interactive-target">
+                <span data-i18n="cfg_opt_dispatch">Auto Emergency Dispatch</span>
+                <input type="checkbox" id="optDispatch" checked />
+              </label>
+            </div>
+
+            <pre class="code-box mono" id="liveLuaOutput"></pre>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================================================================
+         ROADMAP SECTION
+         ====================================================================== -->
+    <section id="roadmap" class="block">
+      <div class="container">
+        <div class="section-head">
+          <span class="section-kicker" data-i18n="road_kicker">// STEP-BY-STEP ROADMAP</span>
+          <h2 data-i18n="road_title">Where We Are Today & What's Coming Next</h2>
+          <p data-i18n="road_sub">
+            Transparent milestones from Day 1 foundation to full open-source FiveM releases.
+          </p>
+        </div>
+
+        <div class="roadmap-grid">
+          <div class="road-card active interactive-target">
+            <span class="road-step" data-i18n="road1_step">PHASE 01 • CURRENT</span>
+            <h3 data-i18n="road1_title">Foundation & Brand</h3>
+            <p data-i18n="road1_desc">
+              Setting up FS-Development, GitHub repositories, documentation, and core standalone architecture.
+            </p>
+          </div>
+
+          <div class="road-card interactive-target">
+            <span class="road-step" data-i18n="road2_step">PHASE 02 • IN PROGRESS</span>
+            <h3 data-i18n="road2_title">FS-Smartwatch v1.0</h3>
+            <p data-i18n="road2_desc">
+              First major free open-source release featuring step/pulse tracking, 3D wrist zoom, and DE/US dispatch.
+            </p>
+          </div>
+
+          <div class="road-card interactive-target">
+            <span class="road-step" data-i18n="road3_step">PHASE 03 • PLANNED</span>
+            <h3 data-i18n="road3_title">Next-Gen Utility Scripts</h3>
+            <p data-i18n="road3_desc">
+              Expanding our catalog with futuristic vehicle HUDs, realistic RP tools, and optimized ox_lib modules.
+            </p>
+          </div>
+
+          <div class="road-card interactive-target">
+            <span class="road-step" data-i18n="road4_step">PHASE 04 • COMMUNITY</span>
+            <h3 data-i18n="road4_title">Open Community Ideas</h3>
+            <p data-i18n="road4_desc">
+              Server owners suggest features, open pull requests, and help shape future open-source releases together.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================================================================
+         INTERACTIVE FAQ ACCORDION
+         ====================================================================== -->
+    <section id="faq" class="block">
+      <div class="container">
+        <div class="section-head">
+          <span class="section-kicker" data-i18n="faq_kicker">// FREQUENTLY ASKED QUESTIONS</span>
+          <h2 data-i18n="faq_title">Everything You Should Know</h2>
+        </div>
+
+        <div class="faq-list">
+          <div class="faq-item open">
+            <button type="button" class="faq-question interactive-target">
+              <span data-i18n="faq1_q">Are FS-Development scripts really 100% free and open source?</span>
+              <span class="faq-icon">+</span>
+            </button>
+            <div class="faq-answer" data-i18n="faq1_a">
+              Yes! Every script released under FS-Development is completely free of charge and permanently open source. There is no obfuscation, no FiveM Asset Escrow lock, and no hidden paywall.
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <button type="button" class="faq-question interactive-target">
+              <span data-i18n="faq2_q">Who develops the scripts and how does AI fit in?</span>
+              <span class="faq-icon">+</span>
+            </button>
+            <div class="faq-answer" data-i18n="faq2_a">
+              I'm Paul, and I build everything on my own. I use modern AI tools as an engineering assistant to prototype faster, debug edge cases, and polish UI code — while testing and refining every mechanic in-game myself.
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <button type="button" class="faq-question interactive-target">
+              <span data-i18n="faq3_q">Which FiveM frameworks are supported?</span>
+              <span class="faq-icon">+</span>
+            </button>
+            <div class="faq-answer" data-i18n="faq3_a">
+              All scripts are designed to be as standalone as possible, leveraging ox_lib, ox_target, and ox_inventory so they run smoothly on ESX, QBCore, Qbox, or custom frameworks.
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <button type="button" class="faq-question interactive-target">
+              <span data-i18n="faq4_q">Why does the stats section show you are just starting out?</span>
+              <span class="faq-icon">+</span>
+            </button>
+            <div class="faq-answer" data-i18n="faq4_a">
+              Honesty matters. FS-Development is brand new, and our first flagship script is currently in active development. Instead of faking big numbers, we show our real Day-1 progress openly.
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ========================================================================
+       FOOTER
+       ======================================================================== -->
+  <footer>
+    <div class="container footer-grid">
+      <div>
+        <div class="logo" style="margin-bottom: 0.4rem;">
+          <span class="logo-badge">FS</span>
+          <span>FS-<span class="sub">Development</span></span>
+        </div>
+        <p style="font-size: 0.88rem; color: var(--text-secondary);" data-i18n="footer_copy">
+          © 2026 FS-Development by Paul. Free & Open Source FiveM Scripts.
+        </p>
+      </div>
+
+      <div class="locale-pill" id="localeStatusPill">
+        🌍 Detecting browser locale...
+      </div>
+    </div>
+  </footer>
+
+  <!-- ========================================================================
+       JAVASCRIPT: AUTO-LANGUAGE, AUTO-THEME, CUSTOM CURSOR, BURGER & LAB
+       ======================================================================== -->
+  <script>
+    (function () {
+      /* ----------------------------------------------------------------------
+         1. FULL BILINGUAL TRANSLATIONS (DE & EN)
+         ---------------------------------------------------------------------- */
+      const translations = {
+        en: {
+          nav_vision: "Vision & Solo Dev",
+          nav_lab: "Interactive Lab",
+          nav_roadmap: "Roadmap",
+          nav_faq: "FAQ",
+          drawer_home: "Home / Overview",
+          drawer_switch_lang: "Language: EN / DE",
+          drawer_switch_theme: "Theme Mode",
+          drawer_note: "Built solo by Paul with AI assistance. 100% Free & Open Source FiveM Scripts.",
+          hero_badge: "DAY 1 • 100% FREE & PERMANENTLY OPEN SOURCE",
+          hero_title: 'Future-Ready <span class="gradient-text">FiveM Scripts</span>. Free Forever.',
+          hero_lead:
+            "Welcome to FS-Development. I'm Paul — creating futuristic, realistic, and standalone FiveM scripts completely solo with the help of AI. Our mission: supporting servers right from the start with innovative scripts that stay free and open source forever.",
+          hero_cta_primary: "Test Interactive Lab",
+          hero_cta_secondary: "About Paul & The Mission",
+          stat1_tag: "STARTING FRESH",
+          stat1_label: "Scripts Released (First Flagship in Active Dev)",
+          stat2_tag: "ZERO PAYWALLS",
+          stat2_label: "Free & Permanently Open Source for Every Server",
+          stat3_tag: "SOLO WORKFLOW",
+          stat3_label: "Paul Alone + Modern AI Engineering Power",
+          stat4_tag: "PERFORMANCE",
+          stat4_label: "Target Idle Resmon via Clean Standalone Lua",
+          vision_kicker: "// WHO IS BEHIND FS-DEVELOPMENT",
+          vision_title: "One Developer. AI Assistance. Zero Limits for Your Server.",
+          vision_sub:
+            "No bloated agency, no locked escrow scripts, and no hidden paywalls. Just pure passion for realistic FiveM systems.",
+          story_heading: "Why I Started FS-Development",
+          story_p1:
+            "Hey, I'm Paul! After working on several FiveM server projects and seeing how hard it is for new or dedicated server owners to afford modern, high-quality scripts, I decided to launch FS-Development on my own.",
+          story_p2:
+            "Right now, we are right at the beginning of this journey. I design, code, test, and maintain everything completely solo — using AI as a smart co-pilot to build futuristic ideas faster, cleaner, and completely open source so everyone can use and customize them.",
+          founder_name: "Paul — Founder & Solo Developer",
+          founder_role: "CfxLua • NUI Design • Standalone FiveM Systems • AI-Assisted Dev",
+          pillar1_title: "Futuristic Concepts",
+          pillar1_desc:
+            "Immersive mechanics like interactive 3D wrist smartwatches, realistic dispatch triggers, and sleek NUI interfaces.",
+          pillar2_title: "Forever Open Source",
+          pillar2_desc:
+            "Full source code on GitHub. Edit, expand, translate, and adapt every single script to your server's exact needs.",
+          pillar3_title: "Solo + AI Speed",
+          pillar3_desc:
+            "By combining hands-on FiveM experience with AI workflows, one developer can ship polished features at full speed.",
+          pillar4_title: "Standalone & ox_lib",
+          pillar4_desc:
+            "Built cleanly around ox_lib, ox_target, and ox_inventory — compatible with German & international RP servers.",
+          lab_kicker: "// INTERACTIVE PREVIEW LAB",
+          lab_title: "Test Our Upcoming Tech Live in Your Browser",
+          lab_sub:
+            "Get a hands-on preview of our very first upcoming open-source release: the FS-Smartwatch NUI & live config builder.",
+          watch_card_title: "Project #01: FS-Smartwatch NUI",
+          watch_status: "IN DEVELOPMENT",
+          watch_steps_lbl: "STEPS",
+          watch_bpm_lbl: "HEART RATE",
+          watch_sos_btn: "🚨 QUICK DISPATCH (112)",
+          watch_btn_sprint: "🏃 Simulate Sprint",
+          watch_btn_face: "🎨 Switch Watchface",
+          watch_btn_region: "🌍 DE (112) / US (911)",
+          watch_log_idle: "Ready — Click any control above to test live NUI feedback.",
+          cfg_card_title: "Live Standalone Config Builder",
+          cfg_copy: "📋 Copy config.lua",
+          cfg_desc:
+            "Toggle features below to see how clean and customizable every FS-Development script is structured:",
+          cfg_opt_zoom: "3D Wrist Camera Zoom",
+          cfg_opt_sound: "Heartbeat & Vibration FX",
+          cfg_opt_ox: "ox_inventory Item Mode",
+          cfg_opt_dispatch: "Auto Emergency Dispatch",
+          road_kicker: "// STEP-BY-STEP ROADMAP",
+          road_title: "Where We Are Today & What's Coming Next",
+          road_sub: "Transparent milestones from Day 1 foundation to full open-source FiveM releases.",
+          road1_step: "PHASE 01 • CURRENT",
+          road1_title: "Foundation & Brand",
+          road1_desc:
+            "Setting up FS-Development, GitHub repositories, documentation, and core standalone architecture.",
+          road2_step: "PHASE 02 • IN PROGRESS",
+          road2_title: "FS-Smartwatch v1.0",
+          road2_desc:
+            "First major free open-source release featuring step/pulse tracking, 3D wrist zoom, and DE/US dispatch.",
+          road3_step: "PHASE 03 • PLANNED",
+          road3_title: "Next-Gen Utility Scripts",
+          road3_desc:
+            "Expanding our catalog with futuristic vehicle HUDs, realistic RP tools, and optimized ox_lib modules.",
+          road4_step: "PHASE 04 • COMMUNITY",
+          road4_title: "Open Community Ideas",
+          road4_desc:
+            "Server owners suggest features, open pull requests, and help shape future open-source releases together.",
+          faq_kicker: "// FREQUENTLY ASKED QUESTIONS",
+          faq_title: "Everything You Should Know",
+          faq1_q: "Are FS-Development scripts really 100% free and open source?",
+          faq1_a:
+            "Yes! Every script released under FS-Development is completely free of charge and permanently open source. There is no obfuscation, no FiveM Asset Escrow lock, and no hidden paywall.",
+          faq2_q: "Who develops the scripts and how does AI fit in?",
+          faq2_a:
+            "I'm Paul, and I build everything on my own. I use modern AI tools as an engineering assistant to prototype faster, debug edge cases, and polish UI code — while testing and refining every mechanic in-game myself.",
+          faq3_q: "Which FiveM frameworks are supported?",
+          faq3_a:
+            "All scripts are designed to be as standalone as possible, leveraging ox_lib, ox_target, and ox_inventory so they run smoothly on ESX, QBCore, Qbox, or custom frameworks.",
+          faq4_q: "Why does the stats section show you are just starting out?",
+          faq4_a:
+            "Honesty matters. FS-Development is brand new, and our first flagship script is currently in active development. Instead of faking big numbers, we show our real Day-1 progress openly.",
+          footer_copy: "© 2026 FS-Development by Paul. Free & Open Source FiveM Scripts."
+        },
+        de: {
+          nav_vision: "Vision & Solo-Dev",
+          nav_lab: "Interaktives Labor",
+          nav_roadmap: "Roadmap",
+          nav_faq: "FAQ",
+          drawer_home: "Start / Übersicht",
+          drawer_switch_lang: "Sprache: DE / EN",
+          drawer_switch_theme: "Design-Modus",
+          drawer_note: "Alleine entwickelt von Paul mit Hilfe von KI. 100% kostenfreie & Open-Source FiveM-Scripts.",
+          hero_badge: "DAY 1 • 100% KOSTENFREI & DAUERHAFT OPEN SOURCE",
+          hero_title: 'Zukunftsnahe <span class="gradient-text">FiveM Scripts</span>. Für immer kostenlos.',
+          hero_lead:
+            "Willkommen bei FS-Development. Ich bin Paul — und entwickle zukunftsnahe, realistische Standalone-Scripts für FiveM komplett alleine mit Hilfe von KI. Unser Ziel: Server von Anfang an mit modernen Scripts zu unterstützen, die dauerhaft kostenfrei und Open Source bleiben.",
+          hero_cta_primary: "Interaktives Labor testen",
+          hero_cta_secondary: "Über Paul & die Mission",
+          stat1_tag: "GANZ AM ANFANG",
+          stat1_label: "Veröffentlichte Scripts (Erstes Hauptprojekt in Entwicklung)",
+          stat2_tag: "KEINE PAYWALLS",
+          stat2_label: "Kostenfrei & dauerhaft Open Source für jeden Server",
+          stat3_tag: "SOLO WORKFLOW",
+          stat3_label: "Paul alleine + moderne KI-Entwicklungs-Power",
+          stat4_tag: "PERFORMANCE",
+          stat4_label: "Ziel-Resmon im Idle durch sauberes Standalone-Lua",
+          vision_kicker: "// WER HINTER FS-DEVELOPMENT STECKT",
+          vision_title: "Ein Entwickler. KI-Unterstützung. Null Grenzen für deinen Server.",
+          vision_sub:
+            "Keine überteuerte Agentur, keine verschlüsselten Escrow-Scripts und keine versteckten Abos. Sondern echte Leidenschaft für realistische FiveM-Systeme.",
+          story_heading: "Warum ich FS-Development gestartet habe",
+          story_p1:
+            "Hey, ich bin Paul! Nachdem ich selbst an mehreren FiveM-Projekten mitgearbeitet und gesehen habe, wie schwer es für Server-Teams ist, moderne und hochwertige Scripts zu finanzieren, habe ich FS-Development komplett alleine ins Leben gerufen.",
+          story_p2:
+            "Aktuell stehen wir noch ganz am Anfang. Ich plane, programmiere, teste und pflege alles alleine — und nutze KI als smartes Werkzeug, um zukunftsnahe Ideen schneller, sauberer und vollständig Open Source umzusetzen, damit jeder Server davon profitieren kann.",
+          founder_name: "Paul — Gründer & Solo-Entwickler",
+          founder_role: "CfxLua • NUI-Design • Standalone FiveM-Systeme • KI-gestützte Entwicklung",
+          pillar1_title: "Zukunftsnahe Konzepte",
+          pillar1_desc:
+            "Immersive Mechaniken wie interaktive 3D-Smartwatches am Handgelenk, realistische Notruf-Systeme und moderne NUIs.",
+          pillar2_title: "Dauerhaft Open Source",
+          pillar2_desc:
+            "Kompletter Quellcode auf GitHub. Bearbeite, erweitere und passe jedes Script frei an deinen eigenen Server an.",
+          pillar3_title: "Solo + KI Speed",
+          pillar3_desc:
+            "Durch die Kombination aus eigener FiveM-Praxis und KI-Workflows entstehen durchdachte Features in Rekordzeit.",
+          pillar4_title: "Standalone & ox_lib",
+          pillar4_desc:
+            "Sauber aufgebaut auf ox_lib, ox_target und ox_inventory — kompatibel für deutsche und internationale RP-Server.",
+          lab_kicker: "// INTERAKTIVES VORSCHAU-LABOR",
+          lab_title: "Teste unsere kommende Technik direkt im Browser",
+          lab_sub:
+            "Wirf einen interaktiven Blick auf unser allererstes kommendes Open-Source-Release: die FS-Smartwatch NUI & den Live-Config-Builder.",
+          watch_card_title: "Projekt #01: FS-Smartwatch NUI",
+          watch_status: "IN ENTWICKLUNG",
+          watch_steps_lbl: "SCHRITTE",
+          watch_bpm_lbl: "PULS",
+          watch_sos_btn: "🚨 SCHNELL-NOTRUF (112)",
+          watch_btn_sprint: "🏃 Sprint simulieren",
+          watch_btn_face: "🎨 Watchface wechseln",
+          watch_btn_region: "🌍 DE (112) / US (911)",
+          watch_log_idle: "Bereit — Klicke oben auf einen Button für live NUI-Feedback.",
+          cfg_card_title: "Live Standalone Config-Builder",
+          cfg_copy: "📋 config.lua kopieren",
+          cfg_desc:
+            "Aktiviere oder deaktiviere Features, um zu sehen, wie übersichtlich jedes FS-Development Script aufgebaut ist:",
+          cfg_opt_zoom: "3D-Handgelenk Kamera-Zoom",
+          cfg_opt_sound: "Herzschlag & Vibrations-FX",
+          cfg_opt_ox: "ox_inventory Item-Modus",
+          cfg_opt_dispatch: "Auto-Notruf Dispatch",
+          road_kicker: "// SCHRITT-FÜR-SCHRITT ROADMAP",
+          road_title: "Wo wir heute stehen & was als Nächstes kommt",
+          road_sub: "Transparente Meilensteine vom Day-1-Aufbau bis zu fertigen Open-Source-Releases.",
+          road1_step: "PHASE 01 • AKTUELL",
+          road1_title: "Aufbau & Grundlage",
+          road1_desc:
+            "Aufbau von FS-Development, GitHub-Organisation, Dokumentation und sauberer Standalone-Basis.",
+          road2_step: "PHASE 02 • IN ARBEIT",
+          road2_title: "FS-Smartwatch v1.0",
+          road2_desc:
+            "Erstes großes Open-Source-Release mit Schritt-/Pulsmessung, 3D-Kamera-Zoom und DE/US-Notruf.",
+          road3_step: "PHASE 03 • GEPLANT",
+          road3_title: "Zukunftsnahe Utility-Scripts",
+          road3_desc:
+            "Erweiterung durch moderne Fahrzeug-HUDs, realistische RP-Tools und performante ox_lib-Module.",
+          road4_step: "PHASE 04 • COMMUNITY",
+          road4_title: "Offene Community-Ideen",
+          road4_desc:
+            "Server-Owner schlagen Features vor, reichen Pull Requests ein und gestalten neue Scripts aktiv mit.",
+          faq_kicker: "// HÄUFIG GESTELLTE FRAGEN",
+          faq_title: "Alles, was du wissen musst",
+          faq1_q: "Sind die Scripts von FS-Development wirklich 100% kostenfrei und Open Source?",
+          faq1_a:
+            "Ja! Jedes Script von FS-Development ist komplett kostenlos und dauerhaft Open Source. Es gibt keine Verschlüsselung (kein Escrow-Lock) und keine versteckten Bezahlschranken.",
+          faq2_q: "Wer entwickelt die Scripts und wie kommt KI zum Einsatz?",
+          faq2_a:
+            "Ich bin Paul und mache das gesamte Projekt alleine. Moderne KI nutze ich als smarten Entwicklungs-Assistenten für schnelleres Prototyping, saubere UI-Strukturen und Fehlersuche — getestet wird alles von mir selbst.",
+          faq3_q: "Welche FiveM-Frameworks werden unterstützt?",
+          faq3_a:
+            "Alle Scripts sind so standalone wie möglich aufgebaut und nutzen ox_lib, ox_target sowie ox_inventory — dadurch laufen sie auf ESX, QBCore, Qbox oder eigenen Frameworks.",
+          faq4_q: "Warum steht bei den Stats, dass ihr noch ganz am Anfang seid?",
+          faq4_a:
+            "Ehrlichkeit gehört dazu. FS-Development ist gerade erst gestartet und das erste große Script befindet sich aktiv in Entwicklung. Statt künstlicher Zahlen zeigen wir unseren echten Day-1-Stand.",
+          footer_copy: "© 2026 FS-Development von Paul. Kostenfreie & Open-Source FiveM-Scripts."
+        }
+      };
+
+      /* ----------------------------------------------------------------------
+         2. LANGUAGE ENGINE (AUTO BROWSER DETECTION + FALLBACK TO ENGLISH)
+         ---------------------------------------------------------------------- */
+      let currentLang = window.__FS_INITIAL_LANG__ || 'en';
+      const rawBrowserLang = (navigator.languages && navigator.languages[0]) || navigator.language || 'unknown';
+
+      function applyLanguage(lang) {
+        currentLang = (lang === 'de') ? 'de' : 'en';
+        document.documentElement.setAttribute('lang', currentLang);
+        localStorage.setItem('fs_dev_lang', currentLang);
+
+        const langLabel = document.getElementById('langLabel');
+        if (langLabel) langLabel.textContent = currentLang.toUpperCase();
+
+        const dict = translations[currentLang];
+        document.querySelectorAll('[data-i18n]').forEach((el) => {
+          const key = el.getAttribute('data-i18n');
+          if (dict[key] !== undefined) {
+            el.innerHTML = dict[key];
+          }
+        });
+
+        // Update dynamic watch SOS button text based on region + language
+        updateWatchRegionUI();
+
+        // Update footer locale status pill
+        const pill = document.getElementById('localeStatusPill');
+        if (pill) {
+          const modeLabel = currentLang === 'de' ? 'Deutsch (Auto/DE)' : 'English (Auto/Fallback)';
+          pill.textContent = `🌍 Browser: ${rawBrowserLang} → ${modeLabel}`;
+        }
+      }
+
+      document.getElementById('langToggle').addEventListener('click', () => {
+        applyLanguage(currentLang === 'de' ? 'en' : 'de');
+      });
+
+      document.getElementById('drawerLangBtn').addEventListener('click', () => {
+        applyLanguage(currentLang === 'de' ? 'en' : 'de');
+      });
+
+      /* ----------------------------------------------------------------------
+         3. THEME ENGINE (AUTO SYSTEM DARK/LIGHT + MANUAL SWITCH)
+         ---------------------------------------------------------------------- */
+      function updateThemeIcon() {
+        const current = document.documentElement.getAttribute('data-theme');
+        const icon = document.getElementById('themeIcon');
+        if (icon) icon.textContent = current === 'dark' ? '☀️' : '🌙';
+      }
+
+      function toggleTheme() {
+        const current = document.documentElement.getAttribute('data-theme');
+        const next = current === 'dark' ? 'light' : 'dark';
+        document.documentElement.setAttribute('data-theme', next);
+        localStorage.setItem('fs_dev_theme', next);
+        updateThemeIcon();
+      }
+
+      document.getElementById('themeToggle').addEventListener('click', toggleTheme);
+      document.getElementById('drawerThemeBtn').addEventListener('click', toggleTheme);
+
+      // Live listener if OS dark/light mode changes while page is open
+      if (window.matchMedia) {
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+          if (!localStorage.getItem('fs_dev_theme')) {
+            document.documentElement.setAttribute('data-theme', e.matches ? 'dark' : 'light');
+            updateThemeIcon();
+          }
+        });
+      }
+
+      /* ----------------------------------------------------------------------
+         4. CUSTOM MAGNETIC CURSOR
+         ---------------------------------------------------------------------- */
+      const cursorDot = document.getElementById('cursorDot');
+      const cursorRing = document.getElementById('cursorRing');
+      let mouseX = window.innerWidth / 2;
+      let mouseY = window.innerHeight / 2;
+      let ringX = mouseX;
+      let ringY = mouseY;
+
+      window.addEventListener('mousemove', (e) => {
+        mouseX = e.clientX;
+        mouseY = e.clientY;
+        cursorDot.style.left = mouseX + 'px';
+        cursorDot.style.top = mouseY + 'px';
+      });
+
+      window.addEventListener('mousedown', () => cursorRing.classList.add('clicking'));
+      window.addEventListener('mouseup', () => cursorRing.classList.remove('clicking'));
+
+      function animateCursor() {
+        ringX += (mouseX - ringX) * 0.18;
+        ringY += (mouseY - ringY) * 0.18;
+        cursorRing.style.left = ringX + 'px';
+        cursorRing.style.top = ringY + 'px';
+        requestAnimationFrame(animateCursor);
+      }
+      requestAnimationFrame(animateCursor);
+
+      document.addEventListener('mouseover', (e) => {
+        if (e.target.closest('a, button, input, label, .interactive-target')) {
+          cursorRing.classList.add('hovered');
+        }
+      });
+
+      document.addEventListener('mouseout', (e) => {
+        if (e.target.closest('a, button, input, label, .interactive-target')) {
+          cursorRing.classList.remove('hovered');
+        }
+      });
+
+      /* ----------------------------------------------------------------------
+         5. BURGER MENU DRAWER
+         ---------------------------------------------------------------------- */
+      const burgerBtn = document.getElementById('burgerBtn');
+      const burgerDrawer = document.getElementById('burgerDrawer');
+      const drawerBackdrop = document.getElementById('drawerBackdrop');
+
+      function setDrawerState(open) {
+        burgerBtn.classList.toggle('active', open);
+        burgerDrawer.classList.toggle('open', open);
+        drawerBackdrop.classList.toggle('open', open);
+        burgerBtn.setAttribute('aria-expanded', String(open));
+        burgerDrawer.setAttribute('aria-hidden', String(!open));
+      }
+
+      burgerBtn.addEventListener('click', () => {
+        const isOpen = burgerDrawer.classList.contains('open');
+        setDrawerState(!isOpen);
+      });
+
+      drawerBackdrop.addEventListener('click', () => setDrawerState(false));
+
+      document.querySelectorAll('.drawer-link').forEach((link) => {
+        link.addEventListener('click', () => setDrawerState(false));
+      });
+
+      window.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') setDrawerState(false);
+      });
+
+      /* ----------------------------------------------------------------------
+         6. INTERACTIVE LAB: SMARTWATCH NUI SIMULATOR
+         ---------------------------------------------------------------------- */
+      let steps = 4280;
+      let bpm = 76;
+      let faceIndex = 0;
+      let dispatchRegion = 'DE'; // DE (112) or US (911)
+      const watchfaces = ['', 'theme-amber', 'theme-emerald'];
+
+      const watchBezel = document.getElementById('watchBezel');
+      const watchStepsEl = document.getElementById('watchSteps');
+      const watchBpmEl = document.getElementById('watchBpm');
+      const watchLogEl = document.getElementById('watchLog');
+      const watchRegionBadge = document.getElementById('watchRegionBadge');
+      const watchSosBtn = document.getElementById('watchSosBtn');
+
+      function updateWatchClock() {
+        const now = new Date();
+        const hh = String(now.getHours()).padStart(2, '0');
+        const mm = String(now.getMinutes()).padStart(2, '0');
+        document.getElementById('watchClock').textContent = `${hh}:${mm}`;
+      }
+      updateWatchClock();
+      setInterval(updateWatchClock, 15000);
+
+      function updateWatchRegionUI() {
+        const code = dispatchRegion === 'DE' ? '112' : '911';
+        watchRegionBadge.textContent = `${dispatchRegion} • ${code}`;
+        watchSosBtn.textContent = currentLang === 'de'
+          ? `🚨 SCHNELL-NOTRUF (${code})`
+          : `🚨 QUICK DISPATCH (${code})`;
+      }
+
+      document.getElementById('btnSprint').addEventListener('click', () => {
+        steps += Math.floor(Math.random() * 140) + 85;
+        bpm = Math.min(168, bpm + Math.floor(Math.random() * 16) + 10);
+        watchStepsEl.textContent = steps.toLocaleString('en-US');
+        watchBpmEl.textContent = `${bpm} BPM`;
+        watchLogEl.textContent = currentLang === 'de'
+          ? `🏃 Sprint erkannt: Puls auf ${bpm} BPM gestiegen (+Schritte)!`
+          : `🏃 Sprint detected: Heart rate climbed to ${bpm} BPM (+steps)!`;
+      });
+
+      document.getElementById('btnWatchface').addEventListener('click', () => {
+        faceIndex = (faceIndex + 1) % watchfaces.length;
+        watchBezel.classList.remove('theme-amber', 'theme-emerald');
+        if (watchfaces[faceIndex]) watchBezel.classList.add(watchfaces[faceIndex]);
+        const names = ['Cyber Cyan', 'Tactical Amber', 'Emerald Pulse'];
+        watchLogEl.textContent = currentLang === 'de'
+          ? `🎨 Watchface gewechselt: ${names[faceIndex]}`
+          : `🎨 Watchface switched: ${names[faceIndex]}`;
+      });
+
+      document.getElementById('btnToggleRegion').addEventListener('click', () => {
+        dispatchRegion = dispatchRegion === 'DE' ? 'US' : 'DE';
+        updateWatchRegionUI();
+        watchLogEl.textContent = currentLang === 'de'
+          ? `🌍 Dispatch-Modus auf ${dispatchRegion} (${dispatchRegion === 'DE' ? '112' : '911'}) umgestellt.`
+          : `🌍 Dispatch mode switched to ${dispatchRegion} (${dispatchRegion === 'DE' ? '112' : '911'}).`;
+      });
+
+      watchSosBtn.addEventListener('click', () => {
+        watchBezel.classList.remove('alert-flash');
+        void watchBezel.offsetWidth;
+        watchBezel.classList.add('alert-flash');
+        const code = dispatchRegion === 'DE' ? '112' : '911';
+        watchLogEl.textContent = currentLang === 'de'
+          ? `🚨 GPS-Notruf (${code}) + Vitalwerte an Leitstelle gesendet!`
+          : `🚨 GPS Emergency Dispatch (${code}) + vitals sent to responders!`;
+      });
+
+      /* ----------------------------------------------------------------------
+         7. INTERACTIVE LAB: LIVE CONFIG.LUA GENERATOR
+         ---------------------------------------------------------------------- */
+      const optZoom = document.getElementById('optZoom');
+      const optSound = document.getElementById('optSound');
+      const optOx = document.getElementById('optOx');
+      const optDispatch = document.getElementById('optDispatch');
+      const liveLuaOutput = document.getElementById('liveLuaOutput');
+
+      function renderLuaConfig() {
+        liveLuaOutput.textContent =
+`Config = {}
+
+Config.Framework = "${optOx.checked ? 'standalone_ox' : 'standalone'}"
+Config.OpenSource = true -- Forever Free by FS-Development
+Config.WristCameraZoom = ${optZoom.checked}
+Config.HapticAndHeartbeatFX = ${optSound.checked}
+Config.UseOxInventoryItem = ${optOx.checked}
+Config.EmergencyDispatch = {
+    Enabled = ${optDispatch.checked},
+    Region = "${dispatchRegion}", -- "DE" (112) or "US" (911)
+    SendVitals = true
+}`;
+      }
+
+      [optZoom, optSound, optOx, optDispatch].forEach((cb) => {
+        cb.addEventListener('change', renderLuaConfig);
+      });
+      document.getElementById('btnToggleRegion').addEventListener('click', renderLuaConfig);
+
+      document.getElementById('copyConfigBtn').addEventListener('click', async () => {
+        try {
+          await navigator.clipboard.writeText(liveLuaOutput.textContent);
+          const btn = document.getElementById('copyConfigBtn');
+          const oldText = btn.textContent;
+          btn.textContent = currentLang === 'de' ? '✅ Kopiert!' : '✅ Copied!';
+          setTimeout(() => { btn.textContent = oldText; }, 1800);
+        } catch (err) {
+          console.warn('Clipboard copy fallback', err);
+        }
+      });
+
+      /* ----------------------------------------------------------------------
+         8. FAQ ACCORDION
+         ---------------------------------------------------------------------- */
+      document.querySelectorAll('.faq-question').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          const item = btn.parentElement;
+          item.classList.toggle('open');
+        });
+      });
+
+      /* ----------------------------------------------------------------------
+         9. INITIALIZE PAGE STATE
+         ---------------------------------------------------------------------- */
+      updateThemeIcon();
+      applyLanguage(currentLang);
+      renderLuaConfig();
+    })();
+  </script>
+</body>
+</html>
