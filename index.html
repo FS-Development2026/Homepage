@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>FS-Development | Future-Ready Open Source FiveM Scripts</title>
-  <meta name="description" content="FS-Development by Paul – Futuristic, standalone, 100% free and permanently open-source FiveM scripts built solo with AI." />
+  <meta name="description" content="FS-Development by Paul – Futuristic, standalone, open-source FiveM scripts built solo with AI. Transparent roadmap from free releases to official commercial launch." />
 
   <!-- Instant Theme & Language Pre-Boot (Prevents any flash of wrong theme/language) -->
   <script>
@@ -810,12 +810,13 @@
     }
 
     /* ==========================================================================
-       8. INTERACTIVE PLAYGROUND (SMARTWATCH NUI SIM + LIVE CONFIG GENERATOR)
+       8. INTERACTIVE PREVIEW & 3-STEP MASTER PLAN
        ========================================================================== */
     .lab-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 2rem;
+      align-items: stretch;
     }
 
     .lab-card {
@@ -826,6 +827,7 @@
       box-shadow: var(--card-shadow);
       display: flex;
       flex-direction: column;
+      justify-content: space-between;
       gap: 1.35rem;
     }
 
@@ -858,6 +860,7 @@
       background: var(--bg-elevated);
       border: 1px solid var(--border-color);
       gap: 1.25rem;
+      flex: 1;
     }
 
     .watch-bezel {
@@ -989,51 +992,76 @@
       min-height: 1.4em;
     }
 
-    /* Interactive Lua Config Builder */
-    .config-toggles {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 0.65rem;
+    /* Interactive 3-Step Master Plan Stack */
+    .plan-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 0.85rem;
     }
 
-    .toggle-pill {
+    .plan-step-card {
+      padding: 1.15rem 1.25rem;
+      border-radius: var(--radius-md);
+      background: var(--bg-elevated);
+      border: 1px solid var(--border-color);
+      transition: all var(--transition);
+      position: relative;
+    }
+
+    .plan-step-card:hover,
+    .plan-step-card.selected {
+      border-color: var(--accent-primary);
+      box-shadow: 0 8px 24px var(--accent-glow);
+      transform: translateX(3px);
+    }
+
+    .plan-step-top {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 0.65rem 0.85rem;
-      border-radius: var(--radius-sm);
-      background: var(--bg-elevated);
-      border: 1px solid var(--border-color);
-      font-size: 0.84rem;
-      font-weight: 500;
-      user-select: none;
+      gap: 0.75rem;
+      margin-bottom: 0.45rem;
     }
 
-    .toggle-pill input {
-      accent-color: var(--accent-primary);
-      width: 16px;
-      height: 16px;
+    .plan-step-num {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.76rem;
+      font-weight: 700;
+      padding: 0.2rem 0.6rem;
+      border-radius: 6px;
+      background: var(--accent-glow);
+      color: var(--accent-primary);
     }
 
-    .code-box {
-      background: var(--bg-code);
-      color: #e2e8f0;
+    .plan-step-status {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.73rem;
+      color: var(--accent-secondary);
+      font-weight: 600;
+    }
+
+    .plan-step-card h4 {
+      font-size: 1.06rem;
+      margin-bottom: 0.35rem;
+    }
+
+    .plan-step-card p {
+      font-size: 0.89rem;
+      color: var(--text-secondary);
+      line-height: 1.55;
+    }
+
+    .plan-legal-note {
+      padding: 0.95rem 1.15rem;
       border-radius: var(--radius-md);
-      padding: 1.1rem;
-      font-size: 0.82rem;
-      line-height: 1.6;
-      border: 1px solid rgba(56, 189, 248, 0.2);
-      overflow-x: auto;
+      background: var(--bg-elevated);
+      border-left: 3px solid var(--accent-secondary);
+      font-size: 0.86rem;
+      color: var(--text-secondary);
     }
 
     @media (max-width: 960px) {
       .lab-grid {
-        grid-template-columns: 1fr;
-      }
-    }
-
-    @media (max-width: 520px) {
-      .config-toggles {
         grid-template-columns: 1fr;
       }
     }
@@ -1149,7 +1177,7 @@
     }
 
     .faq-item.open .faq-answer {
-      max-height: 240px;
+      max-height: 260px;
       padding: 0 1.4rem 1.25rem;
     }
 
@@ -1207,7 +1235,7 @@
 
       <nav class="desktop-nav" aria-label="Main Navigation">
         <a href="#vision" class="interactive-target" data-i18n="nav_vision">Vision & Solo Dev</a>
-        <a href="#lab" class="interactive-target" data-i18n="nav_lab">Interactive Lab</a>
+        <a href="#lab" class="interactive-target" data-i18n="nav_lab">Preview & Master Plan</a>
         <a href="#roadmap" class="interactive-target" data-i18n="nav_roadmap">Roadmap</a>
         <a href="#faq" class="interactive-target" data-i18n="nav_faq">FAQ</a>
       </nav>
@@ -1243,7 +1271,7 @@
           <span data-i18n="nav_vision">Vision & Solo Dev</span> <span>→</span>
         </a>
         <a href="#lab" class="drawer-link interactive-target">
-          <span data-i18n="nav_lab">Interactive Lab</span> <span>→</span>
+          <span data-i18n="nav_lab">Preview & Master Plan</span> <span>→</span>
         </a>
         <a href="#roadmap" class="drawer-link interactive-target">
           <span data-i18n="nav_roadmap">Roadmap</span> <span>→</span>
@@ -1264,7 +1292,7 @@
         </button>
       </div>
       <p class="drawer-meta" data-i18n="drawer_note">
-        Built solo by Paul with AI assistance. 100% Free & Open Source FiveM Scripts.
+        Built solo by Paul with AI assistance. Free & Open Source FiveM Scripts.
       </p>
     </div>
   </aside>
@@ -1278,20 +1306,20 @@
         <div>
           <div class="hero-pill">
             <span class="pulse-dot"></span>
-            <span data-i18n="hero_badge">EARLY STAGE • 100% FREE & PERMANENTLY OPEN SOURCE</span>
+            <span data-i18n="hero_badge">DAY 1 • FREE & OPEN SOURCE FOUNDATION</span>
           </div>
 
           <h1 data-i18n="hero_title">
-            Next-Gen <span class="gradient-text">FiveM Scripts</span>. Free Forever.
+            Future-Ready <span class="gradient-text">FiveM Scripts</span>. Built Open Source.
           </h1>
 
           <p class="hero-lead" data-i18n="hero_lead">
-            Welcome to FS-Development. I'm Paul — building futuristic, realistic, and standalone FiveM resources completely solo with the help of AI. Our mission: supporting servers right from the start with high-end scripts that stay 100% free and open source forever.
+            Welcome to FS-Development. I'm Paul — building futuristic, realistic, and standalone FiveM scripts completely solo with the help of AI. Our mission: supporting servers right from the start with clean free open-source scripts, step by step toward open-source premium releases.
           </p>
 
           <div class="hero-cta-group">
             <a href="#lab" class="btn-primary interactive-target">
-              ⚡ <span data-i18n="hero_cta_primary">Test Interactive Lab</span>
+              ⚡ <span data-i18n="hero_cta_primary">See Exact Plan & Live Demo</span>
             </a>
             <a href="#vision" class="btn-secondary interactive-target">
               👨‍💻 <span data-i18n="hero_cta_secondary">About Paul & The Mission</span>
@@ -1311,10 +1339,9 @@
             <div><span class="t-comment">-- FS-Development Core Philosophy</span></div>
             <div><span class="t-key">Team</span> = <span class="t-str">"FS-Development"</span></div>
             <div><span class="t-key">Founder</span> = <span class="t-str">"Paul (Solo Dev + AI)"</span></div>
-            <div><span class="t-key">Stage</span> = <span class="t-str">"Day 1 / Just Getting Started"</span></div>
-            <div><span class="t-key">Price</span> = <span class="t-str">"0.00 € (Free Forever)"</span></div>
+            <div><span class="t-key">Stage</span> = <span class="t-str">"Step 1: Free Open-Source Launch"</span></div>
             <div><span class="t-key">OpenSource</span> = <span class="t-bool">true</span></div>
-            <div><span class="t-key">Paywalls</span> = <span class="t-bool">false</span></div>
+            <div><span class="t-key">Obfuscation</span> = <span class="t-bool">false</span></div>
             <div><span class="t-key">Architecture</span> = <span class="t-str">"Standalone / ox_lib"</span></div>
             <div><span class="t-key">TargetResmon</span> = <span class="t-str">"0.00 ms idle"</span></div>
           </div>
@@ -1335,9 +1362,9 @@
           </div>
 
           <div class="stat-card interactive-target">
-            <span class="stat-tag" data-i18n="stat2_tag">ZERO PAYWALLS</span>
-            <div class="stat-value">100%</div>
-            <div class="stat-label" data-i18n="stat2_label">Free & Permanently Open Source for Every Server</div>
+            <span class="stat-tag" data-i18n="stat2_tag">100% TRANSPARENT</span>
+            <div class="stat-value">Open</div>
+            <div class="stat-label" data-i18n="stat2_label">Clean Open-Source Code Without Escrow Locks</div>
           </div>
 
           <div class="stat-card interactive-target">
@@ -1362,9 +1389,9 @@
       <div class="container">
         <div class="section-head">
           <span class="section-kicker" data-i18n="vision_kicker">// WHO IS BEHIND FS-DEVELOPMENT</span>
-          <h2 data-i18n="vision_title">One Developer. AI Assistance. Zero Limits for Your Server.</h2>
+          <h2 data-i18n="vision_title">One Developer. AI Assistance. Clean Code for Your Server.</h2>
           <p data-i18n="vision_sub">
-            No bloated agency, no locked escrow scripts, and no hidden subscriptions. Just pure passion for realistic FiveM systems.
+            No bloated agency and no locked black-box scripts. Just honest development, real testing, and a clear step-by-step plan.
           </p>
         </div>
 
@@ -1375,10 +1402,10 @@
                 Why I Started FS-Development
               </h3>
               <p style="color: var(--text-secondary); margin-bottom: 1rem;" data-i18n="story_p1">
-                Hey, I'm Paul! After working on several FiveM projects and seeing how hard it is for new or passionate server owners to afford high-quality, modern scripts, I decided to launch FS-Development on my own.
+                Hey, I'm Paul! After working on several FiveM server projects and seeing how many servers struggle to find clean, futuristic, and customizable scripts, I decided to launch FS-Development completely on my own.
               </p>
               <p style="color: var(--text-secondary);" data-i18n="story_p2">
-                Right now, we are right at the beginning of this journey. I design, code, test, and maintain everything completely solo — using AI as a smart co-pilot to build futuristic ideas faster, cleaner, and completely open source so anyone can learn from and customize the code.
+                Right now, we are right at the beginning of this journey. I plan, code, test, and maintain everything solo — using AI as a smart co-pilot to build modern systems faster and cleaner, starting with free open-source releases to support servers from day one.
               </p>
             </div>
 
@@ -1404,9 +1431,9 @@
 
             <div class="pillar-item interactive-target">
               <div class="pillar-icon">02</div>
-              <h3 data-i18n="pillar2_title">Forever Open Source</h3>
+              <h3 data-i18n="pillar2_title">True Open Source</h3>
               <p data-i18n="pillar2_desc">
-                Full source code on GitHub. Edit, expand, translate, and adapt every single script to your server's exact needs.
+                Readable, cleanly structured source code. Edit, expand, translate, and adapt scripts to your server's exact needs.
               </p>
             </div>
 
@@ -1431,20 +1458,20 @@
     </section>
 
     <!-- ======================================================================
-         INTERACTIVE LAB (SMARTWATCH NUI DEMO & LIVE CONFIG GENERATOR)
+         INTERACTIVE SMARTWATCH PREVIEW & EXACT 3-STEP PLAN
          ====================================================================== -->
     <section id="lab" class="block">
       <div class="container">
         <div class="section-head">
-          <span class="section-kicker" data-i18n="lab_kicker">// INTERACTIVE PREVIEW LAB</span>
-          <h2 data-i18n="lab_title">Test Our Upcoming Tech Live in Your Browser</h2>
+          <span class="section-kicker" data-i18n="lab_kicker">// PREVIEW & EXACT MASTER PLAN</span>
+          <h2 data-i18n="lab_title">First Tech Preview & Our Clear 3-Step Plan</h2>
           <p data-i18n="lab_sub">
-            Get a hands-on preview of our very first upcoming open-source release: the FS-Smartwatch NUI & live config builder.
+            Test our upcoming smartwatch NUI directly on the left — and see our exact step-by-step plan from free open-source releases to official commercial launch on the right.
           </p>
         </div>
 
         <div class="lab-grid">
-          <!-- Interactive Widget 1: Smartwatch NUI Simulator -->
+          <!-- Left Card: Smartwatch NUI Simulator -->
           <div class="lab-card">
             <div class="lab-header">
               <h3 data-i18n="watch_card_title">Project #01: FS-Smartwatch NUI</h3>
@@ -1494,39 +1521,51 @@
             </div>
           </div>
 
-          <!-- Interactive Widget 2: Live Lua Config Generator -->
+          <!-- Right Card: Exact 3-Step Master Plan -->
           <div class="lab-card">
             <div class="lab-header">
-              <h3 data-i18n="cfg_card_title">Live Standalone Config Builder</h3>
-              <button type="button" id="copyConfigBtn" class="mini-chip interactive-target" data-i18n="cfg_copy">
-                📋 Copy config.lua
-              </button>
+              <h3 data-i18n="plan_card_title">Our Exact 3-Step Plan</h3>
+              <span class="lab-badge" data-i18n="plan_badge">TRANSPARENT ROADMAP</span>
             </div>
 
-            <p style="font-size: 0.92rem; color: var(--text-secondary);" data-i18n="cfg_desc">
-              Toggle features below to see how clean and customizable every FS-Development script is structured:
-            </p>
+            <div class="plan-stack">
+              <div class="plan-step-card selected interactive-target" data-plan-step="1">
+                <div class="plan-step-top">
+                  <span class="plan-step-num" data-i18n="plan1_tag">STEP 01 • NOW</span>
+                  <span class="plan-step-status" data-i18n="plan1_status">ACTIVE</span>
+                </div>
+                <h4 data-i18n="plan1_title">Release First Scripts & Build a Clean Foundation</h4>
+                <p data-i18n="plan1_desc">
+                  Publish our first futuristic FiveM scripts completely free of charge, build a clean codebase, gather real server feedback, and support communities from day one.
+                </p>
+              </div>
 
-            <div class="config-toggles">
-              <label class="toggle-pill interactive-target">
-                <span data-i18n="cfg_opt_zoom">3D Wrist Camera Zoom</span>
-                <input type="checkbox" id="optZoom" checked />
-              </label>
-              <label class="toggle-pill interactive-target">
-                <span data-i18n="cfg_opt_sound">Heartbeat & Vibration FX</span>
-                <input type="checkbox" id="optSound" checked />
-              </label>
-              <label class="toggle-pill interactive-target">
-                <span data-i18n="cfg_opt_ox">ox_inventory Item Mode</span>
-                <input type="checkbox" id="optOx" checked />
-              </label>
-              <label class="toggle-pill interactive-target">
-                <span data-i18n="cfg_opt_dispatch">Auto Emergency Dispatch</span>
-                <input type="checkbox" id="optDispatch" checked />
-              </label>
+              <div class="plan-step-card interactive-target" data-plan-step="2">
+                <div class="plan-step-top">
+                  <span class="plan-step-num" data-i18n="plan2_tag">STEP 02 • NEXT</span>
+                  <span class="plan-step-status" data-i18n="plan2_status">PLANNED</span>
+                </div>
+                <h4 data-i18n="plan2_title">Offer Premium Scripts as Open Source</h4>
+                <p data-i18n="plan2_desc">
+                  Introduce larger, feature-rich premium scripts while keeping the source code open and transparent — so server owners always know what runs on their server.
+                </p>
+              </div>
+
+              <div class="plan-step-card interactive-target" data-plan-step="3">
+                <div class="plan-step-top">
+                  <span class="plan-step-num" data-i18n="plan3_tag">STEP 03 • FUTURE</span>
+                  <span class="plan-step-status" data-i18n="plan3_status">WITH ENOUGH TESTERS</span>
+                </div>
+                <h4 data-i18n="plan3_title">Official Commercial Sales & Dedicated Legal Website</h4>
+                <p data-i18n="plan3_desc">
+                  Once enough testers have validated our scripts, we will launch official commercial sales on a separate dedicated website — complete with a legally compliant privacy policy (Datenschutzerklärung), legal notice (Impressum), and small business registration (Kleingewerbe).
+                </p>
+              </div>
             </div>
 
-            <pre class="code-box mono" id="liveLuaOutput"></pre>
+            <div class="plan-legal-note" data-i18n="plan_legal_note">
+              ℹ️ Notice: No commercial sales take place on this page yet. A dedicated store website with full Impressum, Datenschutzerklärung & Kleingewerbe details will follow in Step 03.
+            </div>
           </div>
         </div>
       </div>
@@ -1538,43 +1577,43 @@
     <section id="roadmap" class="block">
       <div class="container">
         <div class="section-head">
-          <span class="section-kicker" data-i18n="road_kicker">// STEP-BY-STEP ROADMAP</span>
+          <span class="section-kicker" data-i18n="road_kicker">// STEP-BY-STEP MILESTONES</span>
           <h2 data-i18n="road_title">Where We Are Today & What's Coming Next</h2>
           <p data-i18n="road_sub">
-            Transparent milestones from Day 1 foundation to full open-source FiveM releases.
+            Clear milestones from Day 1 foundation and tester feedback to official commercial launch.
           </p>
         </div>
 
         <div class="roadmap-grid">
           <div class="road-card active interactive-target">
             <span class="road-step" data-i18n="road1_step">PHASE 01 • CURRENT</span>
-            <h3 data-i18n="road1_title">Foundation & Brand</h3>
+            <h3 data-i18n="road1_title">Clean Foundation</h3>
             <p data-i18n="road1_desc">
-              Setting up FS-Development, GitHub repositories, documentation, and core standalone architecture.
+              Setting up FS-Development, GitHub repositories, clean Lua architecture, and our first free starter releases.
             </p>
           </div>
 
           <div class="road-card interactive-target">
             <span class="road-step" data-i18n="road2_step">PHASE 02 • IN PROGRESS</span>
-            <h3 data-i18n="road2_title">FS-Smartwatch v1.0</h3>
+            <h3 data-i18n="road2_title">FS-Smartwatch & Testers</h3>
             <p data-i18n="road2_desc">
-              First major free open-source release featuring step/pulse tracking, 3D wrist zoom, and DE/US dispatch.
+              Shipping FS-Smartwatch v1.0, collecting feedback from active server testers, and refining every detail.
             </p>
           </div>
 
           <div class="road-card interactive-target">
-            <span class="road-step" data-i18n="road3_step">PHASE 03 • PLANNED</span>
-            <h3 data-i18n="road3_title">Next-Gen Utility Scripts</h3>
+            <span class="road-step" data-i18n="road3_step">PHASE 03 • EXPANSION</span>
+            <h3 data-i18n="road3_title">Premium Open-Source Scripts</h3>
             <p data-i18n="road3_desc">
-              Expanding our catalog with futuristic vehicle HUDs, realistic RP tools, and optimized ox_lib modules.
+              Releasing advanced, futuristic FiveM systems with full transparent open-source code for ambitious servers.
             </p>
           </div>
 
           <div class="road-card interactive-target">
-            <span class="road-step" data-i18n="road4_step">PHASE 04 • COMMUNITY</span>
-            <h3 data-i18n="road4_title">Open Community Ideas</h3>
+            <span class="road-step" data-i18n="road4_step">PHASE 04 • COMMERCIAL</span>
+            <h3 data-i18n="road4_title">Dedicated Store & Kleingewerbe</h3>
             <p data-i18n="road4_desc">
-              Server owners suggest features, open pull requests, and help shape future open-source releases together.
+              Launching a separate, legally compliant commercial website with full Impressum, Datenschutzerklärung, and Kleingewerbe.
             </p>
           </div>
         </div>
@@ -1594,11 +1633,11 @@
         <div class="faq-list">
           <div class="faq-item open">
             <button type="button" class="faq-question interactive-target">
-              <span data-i18n="faq1_q">Are FS-Development scripts really 100% free and open source?</span>
+              <span data-i18n="faq1_q">How does FS-Development's 3-step plan work?</span>
               <span class="faq-icon">+</span>
             </button>
             <div class="faq-answer" data-i18n="faq1_a">
-              Yes! Every script released under FS-Development is completely free of charge and permanently open source. There is no obfuscation, no FiveM Asset Escrow lock, and no hidden paywall.
+              First, we publish clean, free open-source scripts to build a solid foundation and support servers from day one. Second, we offer advanced premium scripts as transparent open source. Third, once enough testers have proven our quality, we launch official commercial sales on a separate website with full legal documentation (Impressum, Datenschutzerklärung & Kleingewerbe).
             </div>
           </div>
 
@@ -1668,54 +1707,54 @@
       const translations = {
         en: {
           nav_vision: "Vision & Solo Dev",
-          nav_lab: "Interactive Lab",
+          nav_lab: "Preview & Master Plan",
           nav_roadmap: "Roadmap",
           nav_faq: "FAQ",
           drawer_home: "Home / Overview",
           drawer_switch_lang: "Language: EN / DE",
           drawer_switch_theme: "Theme Mode",
-          drawer_note: "Built solo by Paul with AI assistance. 100% Free & Open Source FiveM Scripts.",
-          hero_badge: "DAY 1 • 100% FREE & PERMANENTLY OPEN SOURCE",
-          hero_title: 'Future-Ready <span class="gradient-text">FiveM Scripts</span>. Free Forever.',
+          drawer_note: "Built solo by Paul with AI assistance. Free & Open Source FiveM Scripts.",
+          hero_badge: "DAY 1 • FREE & OPEN SOURCE FOUNDATION",
+          hero_title: 'Future-Ready <span class="gradient-text">FiveM Scripts</span>. Built Open Source.',
           hero_lead:
-            "Welcome to FS-Development. I'm Paul — creating futuristic, realistic, and standalone FiveM scripts completely solo with the help of AI. Our mission: supporting servers right from the start with innovative scripts that stay free and open source forever.",
-          hero_cta_primary: "Test Interactive Lab",
+            "Welcome to FS-Development. I'm Paul — building futuristic, realistic, and standalone FiveM scripts completely solo with the help of AI. Our mission: supporting servers right from the start with clean free open-source scripts, step by step toward open-source premium releases.",
+          hero_cta_primary: "See Exact Plan & Live Demo",
           hero_cta_secondary: "About Paul & The Mission",
           stat1_tag: "STARTING FRESH",
           stat1_label: "Scripts Released (First Flagship in Active Dev)",
-          stat2_tag: "ZERO PAYWALLS",
-          stat2_label: "Free & Permanently Open Source for Every Server",
+          stat2_tag: "100% TRANSPARENT",
+          stat2_label: "Clean Open-Source Code Without Escrow Locks",
           stat3_tag: "SOLO WORKFLOW",
           stat3_label: "Paul Alone + Modern AI Engineering Power",
           stat4_tag: "PERFORMANCE",
           stat4_label: "Target Idle Resmon via Clean Standalone Lua",
           vision_kicker: "// WHO IS BEHIND FS-DEVELOPMENT",
-          vision_title: "One Developer. AI Assistance. Zero Limits for Your Server.",
+          vision_title: "One Developer. AI Assistance. Clean Code for Your Server.",
           vision_sub:
-            "No bloated agency, no locked escrow scripts, and no hidden paywalls. Just pure passion for realistic FiveM systems.",
+            "No bloated agency and no locked black-box scripts. Just honest development, real testing, and a clear step-by-step plan.",
           story_heading: "Why I Started FS-Development",
           story_p1:
-            "Hey, I'm Paul! After working on several FiveM server projects and seeing how hard it is for new or dedicated server owners to afford modern, high-quality scripts, I decided to launch FS-Development on my own.",
+            "Hey, I'm Paul! After working on several FiveM server projects and seeing how many servers struggle to find clean, futuristic, and customizable scripts, I decided to launch FS-Development completely on my own.",
           story_p2:
-            "Right now, we are right at the beginning of this journey. I design, code, test, and maintain everything completely solo — using AI as a smart co-pilot to build futuristic ideas faster, cleaner, and completely open source so everyone can use and customize them.",
+            "Right now, we are right at the beginning of this journey. I plan, code, test, and maintain everything solo — using AI as a smart co-pilot to build modern systems faster and cleaner, starting with free open-source releases to support servers from day one.",
           founder_name: "Paul — Founder & Solo Developer",
           founder_role: "CfxLua • NUI Design • Standalone FiveM Systems • AI-Assisted Dev",
           pillar1_title: "Futuristic Concepts",
           pillar1_desc:
-            "Immersive mechanics like interactive 3D wrist smartwatches, realistic dispatch triggers, and sleek NUI interfaces.",
-          pillar2_title: "Forever Open Source",
+            "Immersive mechanics like interactive 3D wrist smartwatches, realistic dispatch triggers, and modern NUI interfaces.",
+          pillar2_title: "True Open Source",
           pillar2_desc:
-            "Full source code on GitHub. Edit, expand, translate, and adapt every single script to your server's exact needs.",
+            "Readable, cleanly structured source code. Edit, expand, translate, and adapt scripts to your server's exact needs.",
           pillar3_title: "Solo + AI Speed",
           pillar3_desc:
             "By combining hands-on FiveM experience with AI workflows, one developer can ship polished features at full speed.",
           pillar4_title: "Standalone & ox_lib",
           pillar4_desc:
             "Built cleanly around ox_lib, ox_target, and ox_inventory — compatible with German & international RP servers.",
-          lab_kicker: "// INTERACTIVE PREVIEW LAB",
-          lab_title: "Test Our Upcoming Tech Live in Your Browser",
+          lab_kicker: "// PREVIEW & EXACT MASTER PLAN",
+          lab_title: "First Tech Preview & Our Clear 3-Step Plan",
           lab_sub:
-            "Get a hands-on preview of our very first upcoming open-source release: the FS-Smartwatch NUI & live config builder.",
+            "Test our upcoming smartwatch NUI directly on the left — and see our exact step-by-step plan from free open-source releases to official commercial launch on the right.",
           watch_card_title: "Project #01: FS-Smartwatch NUI",
           watch_status: "IN DEVELOPMENT",
           watch_steps_lbl: "STEPS",
@@ -1725,38 +1764,49 @@
           watch_btn_face: "🎨 Switch Watchface",
           watch_btn_region: "🌍 DE (112) / US (911)",
           watch_log_idle: "Ready — Click any control above to test live NUI feedback.",
-          cfg_card_title: "Live Standalone Config Builder",
-          cfg_copy: "📋 Copy config.lua",
-          cfg_desc:
-            "Toggle features below to see how clean and customizable every FS-Development script is structured:",
-          cfg_opt_zoom: "3D Wrist Camera Zoom",
-          cfg_opt_sound: "Heartbeat & Vibration FX",
-          cfg_opt_ox: "ox_inventory Item Mode",
-          cfg_opt_dispatch: "Auto Emergency Dispatch",
-          road_kicker: "// STEP-BY-STEP ROADMAP",
+          plan_card_title: "Our Exact 3-Step Plan",
+          plan_badge: "TRANSPARENT ROADMAP",
+          plan1_tag: "STEP 01 • NOW",
+          plan1_status: "ACTIVE",
+          plan1_title: "Release First Scripts & Build a Clean Foundation",
+          plan1_desc:
+            "Publish our first futuristic FiveM scripts completely free of charge, build a clean codebase, gather real server feedback, and support communities from day one.",
+          plan2_tag: "STEP 02 • NEXT",
+          plan2_status: "PLANNED",
+          plan2_title: "Offer Premium Scripts as Open Source",
+          plan2_desc:
+            "Introduce larger, feature-rich premium scripts while keeping the source code open and transparent — so server owners always know what runs on their server.",
+          plan3_tag: "STEP 03 • FUTURE",
+          plan3_status: "WITH ENOUGH TESTERS",
+          plan3_title: "Official Commercial Sales & Dedicated Legal Website",
+          plan3_desc:
+            "Once enough testers have validated our scripts, we will launch official commercial sales on a separate dedicated website — complete with a legally compliant privacy policy (Datenschutzerklärung), legal notice (Impressum), and small business registration (Kleingewerbe).",
+          plan_legal_note:
+            "ℹ️ Notice: No commercial sales take place on this page yet. A dedicated store website with full Impressum, Datenschutzerklärung & Kleingewerbe details will follow in Step 03.",
+          road_kicker: "// STEP-BY-STEP MILESTONES",
           road_title: "Where We Are Today & What's Coming Next",
-          road_sub: "Transparent milestones from Day 1 foundation to full open-source FiveM releases.",
+          road_sub: "Clear milestones from Day 1 foundation and tester feedback to official commercial launch.",
           road1_step: "PHASE 01 • CURRENT",
-          road1_title: "Foundation & Brand",
+          road1_title: "Clean Foundation",
           road1_desc:
-            "Setting up FS-Development, GitHub repositories, documentation, and core standalone architecture.",
+            "Setting up FS-Development, GitHub repositories, clean Lua architecture, and our first free starter releases.",
           road2_step: "PHASE 02 • IN PROGRESS",
-          road2_title: "FS-Smartwatch v1.0",
+          road2_title: "FS-Smartwatch & Testers",
           road2_desc:
-            "First major free open-source release featuring step/pulse tracking, 3D wrist zoom, and DE/US dispatch.",
-          road3_step: "PHASE 03 • PLANNED",
-          road3_title: "Next-Gen Utility Scripts",
+            "Shipping FS-Smartwatch v1.0, collecting feedback from active server testers, and refining every detail.",
+          road3_step: "PHASE 03 • EXPANSION",
+          road3_title: "Premium Open-Source Scripts",
           road3_desc:
-            "Expanding our catalog with futuristic vehicle HUDs, realistic RP tools, and optimized ox_lib modules.",
-          road4_step: "PHASE 04 • COMMUNITY",
-          road4_title: "Open Community Ideas",
+            "Releasing advanced, futuristic FiveM systems with full transparent open-source code for ambitious servers.",
+          road4_step: "PHASE 04 • COMMERCIAL",
+          road4_title: "Dedicated Store & Kleingewerbe",
           road4_desc:
-            "Server owners suggest features, open pull requests, and help shape future open-source releases together.",
+            "Launching a separate, legally compliant commercial website with full Impressum, Datenschutzerklärung, and Kleingewerbe.",
           faq_kicker: "// FREQUENTLY ASKED QUESTIONS",
           faq_title: "Everything You Should Know",
-          faq1_q: "Are FS-Development scripts really 100% free and open source?",
+          faq1_q: "How does FS-Development's 3-step plan work?",
           faq1_a:
-            "Yes! Every script released under FS-Development is completely free of charge and permanently open source. There is no obfuscation, no FiveM Asset Escrow lock, and no hidden paywall.",
+            "First, we publish clean, free open-source scripts to build a solid foundation and support servers from day one. Second, we offer advanced premium scripts as transparent open source. Third, once enough testers have proven our quality, we launch official commercial sales on a separate website with full legal documentation (Impressum, Datenschutzerklärung & Kleingewerbe).",
           faq2_q: "Who develops the scripts and how does AI fit in?",
           faq2_a:
             "I'm Paul, and I build everything on my own. I use modern AI tools as an engineering assistant to prototype faster, debug edge cases, and polish UI code — while testing and refining every mechanic in-game myself.",
@@ -1770,54 +1820,54 @@
         },
         de: {
           nav_vision: "Vision & Solo-Dev",
-          nav_lab: "Interaktives Labor",
+          nav_lab: "Vorschau & Plan",
           nav_roadmap: "Roadmap",
           nav_faq: "FAQ",
           drawer_home: "Start / Übersicht",
           drawer_switch_lang: "Sprache: DE / EN",
           drawer_switch_theme: "Design-Modus",
-          drawer_note: "Alleine entwickelt von Paul mit Hilfe von KI. 100% kostenfreie & Open-Source FiveM-Scripts.",
-          hero_badge: "DAY 1 • 100% KOSTENFREI & DAUERHAFT OPEN SOURCE",
-          hero_title: 'Zukunftsnahe <span class="gradient-text">FiveM Scripts</span>. Für immer kostenlos.',
+          drawer_note: "Alleine entwickelt von Paul mit Hilfe von KI. Kostenfreie & Open-Source FiveM-Scripts.",
+          hero_badge: "DAY 1 • KOSTENFREIE & OPEN-SOURCE BASIS",
+          hero_title: 'Zukunftsnahe <span class="gradient-text">FiveM Scripts</span>. Sauber & Open Source.',
           hero_lead:
-            "Willkommen bei FS-Development. Ich bin Paul — und entwickle zukunftsnahe, realistische Standalone-Scripts für FiveM komplett alleine mit Hilfe von KI. Unser Ziel: Server von Anfang an mit modernen Scripts zu unterstützen, die dauerhaft kostenfrei und Open Source bleiben.",
-          hero_cta_primary: "Interaktives Labor testen",
+            "Willkommen bei FS-Development. Ich bin Paul — und entwickle zukunftsnahe, realistische Standalone-Scripts für FiveM komplett alleine mit Hilfe von KI. Unser Plan: Server von Anfang an mit kostenfreien Open-Source-Scripts unterstützen, Schritt für Schritt bis hin zu offenen Premium-Scripts.",
+          hero_cta_primary: "Genauen Plan & Live-Demo ansehen",
           hero_cta_secondary: "Über Paul & die Mission",
           stat1_tag: "GANZ AM ANFANG",
           stat1_label: "Veröffentlichte Scripts (Erstes Hauptprojekt in Entwicklung)",
-          stat2_tag: "KEINE PAYWALLS",
-          stat2_label: "Kostenfrei & dauerhaft Open Source für jeden Server",
+          stat2_tag: "100% TRANSPARENT",
+          stat2_label: "Sauberer Open-Source-Code ohne Escrow-Sperren",
           stat3_tag: "SOLO WORKFLOW",
           stat3_label: "Paul alleine + moderne KI-Entwicklungs-Power",
           stat4_tag: "PERFORMANCE",
           stat4_label: "Ziel-Resmon im Idle durch sauberes Standalone-Lua",
           vision_kicker: "// WER HINTER FS-DEVELOPMENT STECKT",
-          vision_title: "Ein Entwickler. KI-Unterstützung. Null Grenzen für deinen Server.",
+          vision_title: "Ein Entwickler. KI-Unterstützung. Sauberer Code für deinen Server.",
           vision_sub:
-            "Keine überteuerte Agentur, keine verschlüsselten Escrow-Scripts und keine versteckten Abos. Sondern echte Leidenschaft für realistische FiveM-Systeme.",
+            "Keine überteuerte Agentur und keine verschlossenen Blackbox-Scripts. Sondern ehrliche Entwicklung, echte Tests und ein klarer Schritt-für-Schritt-Plan.",
           story_heading: "Warum ich FS-Development gestartet habe",
           story_p1:
-            "Hey, ich bin Paul! Nachdem ich selbst an mehreren FiveM-Projekten mitgearbeitet und gesehen habe, wie schwer es für Server-Teams ist, moderne und hochwertige Scripts zu finanzieren, habe ich FS-Development komplett alleine ins Leben gerufen.",
+            "Hey, ich bin Paul! Nachdem ich selbst an mehreren FiveM-Projekten mitgearbeitet und gesehen habe, wie schwer es für Server-Teams ist, saubere, zukunftsnahe und anpassbare Scripts zu finden, habe ich FS-Development komplett alleine ins Leben gerufen.",
           story_p2:
-            "Aktuell stehen wir noch ganz am Anfang. Ich plane, programmiere, teste und pflege alles alleine — und nutze KI als smartes Werkzeug, um zukunftsnahe Ideen schneller, sauberer und vollständig Open Source umzusetzen, damit jeder Server davon profitieren kann.",
+            "Aktuell stehen wir noch ganz am Anfang. Ich plane, programmiere, teste und pflege alles alleine — und nutze KI als smartes Werkzeug, um moderne Systeme schneller und sauberer umzusetzen. Wir starten mit kostenfreien Open-Source-Releases, um Server direkt ab Tag 1 zu unterstützen.",
           founder_name: "Paul — Gründer & Solo-Entwickler",
           founder_role: "CfxLua • NUI-Design • Standalone FiveM-Systeme • KI-gestützte Entwicklung",
           pillar1_title: "Zukunftsnahe Konzepte",
           pillar1_desc:
             "Immersive Mechaniken wie interaktive 3D-Smartwatches am Handgelenk, realistische Notruf-Systeme und moderne NUIs.",
-          pillar2_title: "Dauerhaft Open Source",
+          pillar2_title: "Echtes Open Source",
           pillar2_desc:
-            "Kompletter Quellcode auf GitHub. Bearbeite, erweitere und passe jedes Script frei an deinen eigenen Server an.",
+            "Lesbarer, sauber aufgebauter Quellcode. Bearbeite, erweitere und passe jedes Script frei an deinen eigenen Server an.",
           pillar3_title: "Solo + KI Speed",
           pillar3_desc:
             "Durch die Kombination aus eigener FiveM-Praxis und KI-Workflows entstehen durchdachte Features in Rekordzeit.",
           pillar4_title: "Standalone & ox_lib",
           pillar4_desc:
             "Sauber aufgebaut auf ox_lib, ox_target und ox_inventory — kompatibel für deutsche und internationale RP-Server.",
-          lab_kicker: "// INTERAKTIVES VORSCHAU-LABOR",
-          lab_title: "Teste unsere kommende Technik direkt im Browser",
+          lab_kicker: "// LIVE-VORSCHAU & GENAUER MASTERPLAN",
+          lab_title: "Erste Technik-Vorschau & Unser 3-Stufen-Plan",
           lab_sub:
-            "Wirf einen interaktiven Blick auf unser allererstes kommendes Open-Source-Release: die FS-Smartwatch NUI & den Live-Config-Builder.",
+            "Teste links unsere kommende Smartwatch-NUI direkt im Browser — und sieh rechts unseren genauen Fahrplan vom kostenfreien Open-Source-Start bis zum offiziellen gewerblichen Verkauf.",
           watch_card_title: "Projekt #01: FS-Smartwatch NUI",
           watch_status: "IN ENTWICKLUNG",
           watch_steps_lbl: "SCHRITTE",
@@ -1827,38 +1877,49 @@
           watch_btn_face: "🎨 Watchface wechseln",
           watch_btn_region: "🌍 DE (112) / US (911)",
           watch_log_idle: "Bereit — Klicke oben auf einen Button für live NUI-Feedback.",
-          cfg_card_title: "Live Standalone Config-Builder",
-          cfg_copy: "📋 config.lua kopieren",
-          cfg_desc:
-            "Aktiviere oder deaktiviere Features, um zu sehen, wie übersichtlich jedes FS-Development Script aufgebaut ist:",
-          cfg_opt_zoom: "3D-Handgelenk Kamera-Zoom",
-          cfg_opt_sound: "Herzschlag & Vibrations-FX",
-          cfg_opt_ox: "ox_inventory Item-Modus",
-          cfg_opt_dispatch: "Auto-Notruf Dispatch",
-          road_kicker: "// SCHRITT-FÜR-SCHRITT ROADMAP",
+          plan_card_title: "Unser genauer 3-Stufen-Plan",
+          plan_badge: "TRANSPARENTER FAHRPLAN",
+          plan1_tag: "STUFE 01 • JETZT",
+          plan1_status: "AKTIV",
+          plan1_title: "Erste Scripts veröffentlichen & sauber aufbauen",
+          plan1_desc:
+            "Die ersten zukunftsnahen FiveM-Scripts komplett kostenfrei veröffentlichen, eine saubere Code-Struktur aufbauen, echtes Feedback sammeln und Server von Anfang an unterstützen.",
+          plan2_tag: "STUFE 02 • DANACH",
+          plan2_status: "GEPLANT",
+          plan2_title: "Premium-Scripts als Open Source verkaufen",
+          plan2_desc:
+            "Umfangreiche Premium-Scripts anbieten — dabei bleibt der Quellcode bewusst Open Source und transparent, damit Server-Owner jederzeit volle Kontrolle behalten.",
+          plan3_tag: "STUFE 03 • ZUKUNFT",
+          plan3_status: "BEI GENUG TESTERN",
+          plan3_title: "Gewerblicher Verkauf & eigene rechtssichere Website",
+          plan3_desc:
+            "Sobald genügend Tester unsere Scripts geprüft haben, startet der offizielle gewerbliche Verkauf. Dafür folgt eine eigene, separate Website mit allen wichtigen Details sowie rechtlich korrekter Datenschutzerklärung, Impressum und Kleingewerbe.",
+          plan_legal_note:
+            "ℹ️ Hinweis: Auf dieser Seite findet aktuell noch kein gewerblicher Verkauf statt. Eine eigene Shop-Website mit vollständigem Impressum, Datenschutzerklärung & Kleingewerbe folgt in Stufe 03.",
+          road_kicker: "// SCHRITT-FÜR-SCHRITT MEILENSTEINE",
           road_title: "Wo wir heute stehen & was als Nächstes kommt",
-          road_sub: "Transparente Meilensteine vom Day-1-Aufbau bis zu fertigen Open-Source-Releases.",
+          road_sub: "Klare Meilensteine vom Day-1-Aufbau über aktive Tester bis zum offiziellen gewerblichen Start.",
           road1_step: "PHASE 01 • AKTUELL",
-          road1_title: "Aufbau & Grundlage",
+          road1_title: "Sauberer Aufbau",
           road1_desc:
-            "Aufbau von FS-Development, GitHub-Organisation, Dokumentation und sauberer Standalone-Basis.",
+            "Aufbau von FS-Development, GitHub-Repositories, sauberer Lua-Architektur und den ersten kostenfreien Releases.",
           road2_step: "PHASE 02 • IN ARBEIT",
-          road2_title: "FS-Smartwatch v1.0",
+          road2_title: "FS-Smartwatch & Tester",
           road2_desc:
-            "Erstes großes Open-Source-Release mit Schritt-/Pulsmessung, 3D-Kamera-Zoom und DE/US-Notruf.",
-          road3_step: "PHASE 03 • GEPLANT",
-          road3_title: "Zukunftsnahe Utility-Scripts",
+            "Veröffentlichung der FS-Smartwatch v1.0, Feedback von aktiven Server-Testern sammeln und jedes Detail verfeinern.",
+          road3_step: "PHASE 03 • AUSBAU",
+          road3_title: "Premium Open-Source-Scripts",
           road3_desc:
-            "Erweiterung durch moderne Fahrzeug-HUDs, realistische RP-Tools und performante ox_lib-Module.",
-          road4_step: "PHASE 04 • COMMUNITY",
-          road4_title: "Offene Community-Ideen",
+            "Verkauf und Bereitstellung umfangreicher Premium-Scripts mit komplett offenem, transparentem Quellcode.",
+          road4_step: "PHASE 04 • GEWERBE",
+          road4_title: "Eigene Website & Kleingewerbe",
           road4_desc:
-            "Server-Owner schlagen Features vor, reichen Pull Requests ein und gestalten neue Scripts aktiv mit.",
+            "Start der separaten gewerblichen Website mit rechtssicherem Impressum, Datenschutzerklärung und Kleingewerbe.",
           faq_kicker: "// HÄUFIG GESTELLTE FRAGEN",
           faq_title: "Alles, was du wissen musst",
-          faq1_q: "Sind die Scripts von FS-Development wirklich 100% kostenfrei und Open Source?",
+          faq1_q: "Wie genau sieht der 3-Stufen-Plan von FS-Development aus?",
           faq1_a:
-            "Ja! Jedes Script von FS-Development ist komplett kostenlos und dauerhaft Open Source. Es gibt keine Verschlüsselung (kein Escrow-Lock) und keine versteckten Bezahlschranken.",
+            "Zuerst veröffentlichen wir saubere, kostenfreie Open-Source-Scripts, um eine starke Basis aufzubauen und Server ab Tag 1 zu unterstützen. Danach bieten wir umfangreiche Premium-Scripts weiterhin als transparentes Open Source an. Sobald genügend Tester dabei sind, folgt der gewerbliche Verkauf auf einer eigenen, separaten Website mit rechtlich korrektem Impressum, Datenschutzerklärung und Kleingewerbe.",
           faq2_q: "Wer entwickelt die Scripts und wie kommt KI zum Einsatz?",
           faq2_a:
             "Ich bin Paul und mache das gesamte Projekt alleine. Moderne KI nutze ich als smarten Entwicklungs-Assistenten für schnelleres Prototyping, saubere UI-Strukturen und Fehlersuche — getestet wird alles von mir selbst.",
@@ -1894,10 +1955,8 @@
           }
         });
 
-        // Update dynamic watch SOS button text based on region + language
         updateWatchRegionUI();
 
-        // Update footer locale status pill
         const pill = document.getElementById('localeStatusPill');
         if (pill) {
           const modeLabel = currentLang === 'de' ? 'Deutsch (Auto/DE)' : 'English (Auto/Fallback)';
@@ -1933,7 +1992,6 @@
       document.getElementById('themeToggle').addEventListener('click', toggleTheme);
       document.getElementById('drawerThemeBtn').addEventListener('click', toggleTheme);
 
-      // Live listener if OS dark/light mode changes while page is open
       if (window.matchMedia) {
         window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
           if (!localStorage.getItem('fs_dev_theme')) {
@@ -2086,45 +2144,14 @@
       });
 
       /* ----------------------------------------------------------------------
-         7. INTERACTIVE LAB: LIVE CONFIG.LUA GENERATOR
+         7. INTERACTIVE 3-STEP PLAN SELECTION
          ---------------------------------------------------------------------- */
-      const optZoom = document.getElementById('optZoom');
-      const optSound = document.getElementById('optSound');
-      const optOx = document.getElementById('optOx');
-      const optDispatch = document.getElementById('optDispatch');
-      const liveLuaOutput = document.getElementById('liveLuaOutput');
-
-      function renderLuaConfig() {
-        liveLuaOutput.textContent =
-`Config = {}
-
-Config.Framework = "${optOx.checked ? 'standalone_ox' : 'standalone'}"
-Config.OpenSource = true -- Forever Free by FS-Development
-Config.WristCameraZoom = ${optZoom.checked}
-Config.HapticAndHeartbeatFX = ${optSound.checked}
-Config.UseOxInventoryItem = ${optOx.checked}
-Config.EmergencyDispatch = {
-    Enabled = ${optDispatch.checked},
-    Region = "${dispatchRegion}", -- "DE" (112) or "US" (911)
-    SendVitals = true
-}`;
-      }
-
-      [optZoom, optSound, optOx, optDispatch].forEach((cb) => {
-        cb.addEventListener('change', renderLuaConfig);
-      });
-      document.getElementById('btnToggleRegion').addEventListener('click', renderLuaConfig);
-
-      document.getElementById('copyConfigBtn').addEventListener('click', async () => {
-        try {
-          await navigator.clipboard.writeText(liveLuaOutput.textContent);
-          const btn = document.getElementById('copyConfigBtn');
-          const oldText = btn.textContent;
-          btn.textContent = currentLang === 'de' ? '✅ Kopiert!' : '✅ Copied!';
-          setTimeout(() => { btn.textContent = oldText; }, 1800);
-        } catch (err) {
-          console.warn('Clipboard copy fallback', err);
-        }
+      const planCards = document.querySelectorAll('.plan-step-card');
+      planCards.forEach((card) => {
+        card.addEventListener('click', () => {
+          planCards.forEach((c) => c.classList.remove('selected'));
+          card.classList.add('selected');
+        });
       });
 
       /* ----------------------------------------------------------------------
@@ -2142,7 +2169,6 @@ Config.EmergencyDispatch = {
          ---------------------------------------------------------------------- */
       updateThemeIcon();
       applyLanguage(currentLang);
-      renderLuaConfig();
     })();
   </script>
 </body>
